@@ -91,6 +91,45 @@ export const constantRoutes = [
   },
 
   {
+    path: '/duanjunxing',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'Form',
+        component: () => import('@/views/DuanJunXing/index'),
+        meta: { title: '段', icon: 'form' }
+      }
+    ]
+  },
+
+  {
+    path: '/maozijun',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'Form',
+        component: () => import('@/views/MaoZiJun/index'),
+        meta: { title: '毛', icon: 'form' }
+      }
+    ]
+  },
+
+  {
+    path: '/zhaoyulong',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'Form',
+        component: () => import('@/views/ZhaoYuLong/index'),
+        meta: { title: '龙', icon: 'form' }
+      }
+    ]
+  },
+
+  {
     path: '/nested',
     component: Layout,
     redirect: '/nested/menu1',

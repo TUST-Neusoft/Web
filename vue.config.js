@@ -36,7 +36,15 @@ module.exports = {
       warnings: false,
       errors: true
     },
-    before: require('./mock/mock-server.js')
+    proxy: {
+      '/api': { // 表示拦截以/api开头的请求路径
+        target: process.env.VUE_APP_BASE_API,
+        changOrigin: true, // 是否开启跨域
+        pathRewrite: {
+          '^/api': '' // 重写api，把api变成空字符，因为我们真正请求的路径是没有api的
+        }
+      }
+    }
   },
   configureWebpack: {
     // provide the app's title in webpack's name field, so that
