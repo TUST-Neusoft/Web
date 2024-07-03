@@ -78,14 +78,40 @@ export const constantRoutes = [
   },
 
   {
-    path: '/form',
+    path: '/goods',
     component: Layout,
     children: [
       {
         path: 'index',
-        name: 'Form',
-        component: () => import('@/views/form/index'),
-        meta: { title: 'Form', icon: 'form' }
+        name: 'goods',
+        component: () => import('@/views/goods/index'),
+        meta: { title: '全部商品', icon: 'form' }
+      }
+    ]
+  },
+
+  {
+    path: '/cart',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'cart',
+        component: () => import('@/views/cart/index'),
+        meta: { title: '购物车', icon: 'form' }
+      }
+    ]
+  },
+
+  {
+    path: '/user',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'user',
+        component: () => import('@/views/user/index'),
+        meta: { title: '用户', icon: 'form' }
       }
     ]
   },
