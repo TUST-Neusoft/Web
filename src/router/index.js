@@ -225,6 +225,101 @@ export const constantRoutes = [
     ]
   },
 
+  // 添加管理员界面的路由
+  {
+    path: '/admin',
+    component: Layout,
+    redirect: '/admin/dashboard',
+    name: 'Admin',
+    meta: { title: '管理员', icon: 'el-icon-s-tools' },
+    children: [
+      {
+        path: 'login',
+        name: 'AdminLogin',
+        component: () => import('@/views/admin/Login/index'),
+        meta: { title: '系统登录', icon: 'el-icon-user' }
+      },
+      {
+        path: 'role-management',
+        name: 'RoleManagement',
+        component: () => import('@/views/admin/RoleManagement/index'),
+        meta: { title: '角色管理', icon: 'el-icon-s-custom' }
+      },
+      {
+        path: 'user-management',
+        name: 'UserManagement',
+        component: () => import('@/views/admin/UserManagement/index'),
+        meta: { title: '用户管理', icon: 'el-icon-s-check' }
+      },
+      {
+        path: 'category-management',
+        name: 'CategoryManagement',
+        component: () => import('@/views/admin/CategoryManagement/index'),
+        meta: { title: '商品类别管理', icon: 'el-icon-menu' }
+      },
+      {
+        path: 'product-management',
+        name: 'ProductManagement',
+        component: () => import('@/views/admin/ProductManagement/index'),
+        meta: { title: '商品管理', icon: 'el-icon-goods' }
+      },
+      {
+        path: 'area-management',
+        name: 'AreaManagement',
+        component: () => import('@/views/admin/AreaManagement/index'),
+        meta: { title: '区域管理', icon: 'el-icon-place' }
+      },
+      {
+        path: 'store-management',
+        name: 'StoreManagement',
+        component: () => import('@/views/admin/StoreManagement/index'),
+        meta: { title: '门店管理', icon: 'el-icon-s-shop' }
+      },
+      {
+        path: 'order-management',
+        name: 'OrderManagement',
+        component: () => import('@/views/admin/OrderManagement/index'),
+        meta: { title: '订单管理', icon: 'el-icon-s-order' }
+      },
+      {
+        path: 'promotion-management',
+        name: 'PromotionManagement',
+        component: () => import('@/views/admin/PromotionManagement/index'),
+        meta: { title: '促销管理', icon: 'el-icon-s-promotion' }
+      },
+      {
+        path: 'notice-management',
+        name: 'NoticeManagement',
+        component: () => import('@/views/admin/NoticeManagement/index'),
+        meta: { title: '通知公告', icon: 'el-icon-bell' }
+      },
+      {
+        path: 'parking-management',
+        name: 'ParkingManagement',
+        component: () => import('@/views/admin/ParkingManagement/index'),
+        meta: { title: '车位管理', icon: 'el-icon-s-platform' }
+      },
+      {
+        path: 'visitor-record',
+        name: 'VisitorRecord',
+        component: () => import('@/views/admin/VisitorRecord/index'),
+        meta: { title: '访客记录', icon: 'el-icon-s-data' }
+      },
+      {
+        path: 'repair-management',
+        name: 'RepairManagement',
+        component: () => import('@/views/admin/RepairManagement/index'),
+        meta: { title: '报事报修', icon: 'el-icon-s-tools' }
+      },
+      {
+        path: 'payment-record',
+        name: 'PaymentRecord',
+        component: () => import('@/views/admin/PaymentRecord/index'),
+        meta: { title: '缴纳记录', icon: 'el-icon-s-finance' }
+      }
+    ]
+  },
+
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]
