@@ -93,7 +93,7 @@ export default {
       // 这里可以添加实际的支付逻辑，比如向后端发送请求
       // 支付成功后显示成功信息和按钮
       // 使用 $router.push 进行页面跳转
-      this.$router.push('/src/views/cart/paysucceed.vue')
+      this.$router.push('paysucceed')
     },
     showQRCode (type) {
       if (type === 'wechat') {

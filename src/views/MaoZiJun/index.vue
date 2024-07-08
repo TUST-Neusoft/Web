@@ -40,7 +40,7 @@ export default {
       // 可以执行支付流程、跳转支付页面等操作
       console.log('开始支付流程')
       // 示例：假设支付成功后跳转到订单管理页面
-      this.$router.push('/order-management')
+      this.$router.push('/paysucceed')
     }
   }
 }
