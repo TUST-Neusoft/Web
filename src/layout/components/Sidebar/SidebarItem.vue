@@ -1,9 +1,14 @@
 <template>
   <div v-if="!item.hidden">
-    <template v-if="hasOneShowingChild(item.children,item) && (!onlyOneChild.children||onlyOneChild.noShowingChildren)&&!item.alwaysShow">
+    <template
+      v-if="hasOneShowingChild(item.children, item) && (!onlyOneChild.children || onlyOneChild.noShowingChildren) && !item.alwaysShow"
+    >
       <app-link v-if="onlyOneChild.meta" :to="resolvePath(onlyOneChild.path)">
-        <el-menu-item :index="resolvePath(onlyOneChild.path)" :class="{'submenu-title-noDropdown':!isNest}">
-          <item :icon="onlyOneChild.meta.icon||(item.meta&&item.meta.icon)" :title="onlyOneChild.meta.title" />
+        <el-menu-item
+          :index="resolvePath(onlyOneChild.path)"
+          :class="{ 'submenu-title-noDropdown': !isNest, 'selected-item': isActive, 'unselected-item': !isActive }"
+        >
+          <item :icon="onlyOneChild.meta.icon || (item.meta && item.meta.icon)" :title="onlyOneChild.meta.title" />
         </el-menu-item>
       </app-link>
     </template>
@@ -18,7 +23,7 @@
         :is-nest="true"
         :item="child"
         :base-path="resolvePath(child.path)"
-        class="nest-menu"
+        :class="{ 'nest-menu': any }"
       />
     </el-submenu>
   </div>
@@ -36,7 +41,6 @@ export default {
   components: { Item, AppLink },
   mixins: [FixiOSBug],
   props: {
-    // route object
     item: {
       type: Object,
       required: true
@@ -51,10 +55,14 @@ export default {
     }
   },
   data() {
-    // To fix https://github.com/PanJiaChen/vue-admin-template/issues/237
-    // TODO: refactor with render function
     this.onlyOneChild = null
     return {}
+  },
+  computed: {
+    // 添加isActive计算属性来检查当前项是否被选中
+    isActive() {
+      return this.resolvePath(this.onlyOneChild ? this.onlyOneChild.path : this.item.path) === this.$route.path
+    }
   },
   methods: {
     hasOneShowingChild(children = [], parent) {
@@ -62,20 +70,17 @@ export default {
         if (item.hidden) {
           return false
         } else {
-          // Temp set(will be used if only has one showing child)
           this.onlyOneChild = item
           return true
         }
       })
 
-      // When there is only one child router, the child router is displayed by default
       if (showingChildren.length === 1) {
         return true
       }
 
-      // Show parent if there are no child router to display
       if (showingChildren.length === 0) {
-        this.onlyOneChild = { ... parent, path: '', noShowingChildren: true }
+        this.onlyOneChild = { ...parent, path: '', noShowingChildren: true }
         return true
       }
 
@@ -89,7 +94,31 @@ export default {
         return this.basePath
       }
       return path.resolve(this.basePath, routePath)
+    },
+    childIsActive(child) {
+      return this.resolvePath(child.path) === this.$route.path
     }
   }
 }
 </script>
+
+<style scoped>
+.unselected-item {
+  height: 50px;
+  line-height: 50px;
+}
+
+.selected-item {
+  /* border-left: 4px solid #0096ff; */
+  background-color: #4169E1 !important;
+  height: 50px;
+  line-height: 50px;
+}
+
+.selected-child-item {
+  /* border-left: 4px solid #0096ff; */
+  background-color: #007bff !important;
+  height: 50px;
+  line-height: 50px;
+}
+</style>
