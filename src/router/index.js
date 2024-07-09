@@ -44,6 +44,24 @@ export const constantRoutes = [
   },
 
   {
+    path: '/pay',
+    component: () => import('@/views/404'),
+    hidden: true
+  },
+
+  {
+    path: '/paysucceed',
+    component: () => import('@/views/cart/paysucceed.vue'),
+    hidden: true
+  },
+
+  {
+    path: '/orders',
+    component: () => import('@/views/404'),
+    hidden: true
+  },
+
+  {
     path: '/',
     component: Layout,
     redirect: '/dashboard',
