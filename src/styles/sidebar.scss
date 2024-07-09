@@ -3,24 +3,16 @@
   .main-container {
     min-height: 100%;
     transition: margin-left .28s;
-    margin-left: $sideBarWidth;
     position: relative;
   }
 
   .sidebar-container {
     transition: width 0.28s;
-    width: $sideBarWidth !important;
+    width: 100%;
     background-color: $menuBg;
-    height: 100%;
-    position: fixed;
     font-size: 0px;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    z-index: 1001;
-    overflow: hidden;
+    height: 50px;
 
-    // reset element-ui css
     .horizontal-collapse-transition {
       transition: 0s width ease-in-out, 0s padding-left ease-in-out, 0s padding-right ease-in-out;
     }
@@ -49,7 +41,7 @@
 
     a {
       display: inline-block;
-      width: 100%;
+      width: 200px;
       overflow: hidden;
     }
 
@@ -63,14 +55,35 @@
     }
 
     .el-menu {
+      display: flex; // 让菜单项横向排列
+      flex-direction: row; // 水平排列子元素
       border: none;
-      height: 100%;
       width: 100% !important;
+      height: auto; // 高度自动调整
     }
 
-    // menu hover
+    .el-menu-item,
+    .el-submenu {
+      display: inline-flex; // 使每个菜单项横向排列
+      align-items: center; // 垂直居中对齐
+      justify-content: center; // 水平居中对齐
+      height: 50px; // 你可以根据需要调整高度
+      width: 150px;
+      padding: 0 10px; // 根据需要调整内边距
+      white-space: nowrap; // 禁止换行
+
+      &:hover {
+        background-color: $subMenuHover !important;
+      }
+    }
+
     .submenu-title-noDropdown,
     .el-submenu__title {
+      display: inline-flex; // 使其内部内容横向排列
+      align-items: center;
+      justify-content: center;
+      padding: 0 10px; // 根据需要调整内边距
+
       &:hover {
         background-color: $menuHover !important;
       }
@@ -82,7 +95,10 @@
 
     & .nest-menu .el-submenu>.el-submenu__title,
     & .el-submenu .el-menu-item {
-      min-width: $sideBarWidth !important;
+      display: inline-flex; // 使其内部内容横向排列
+      align-items: center;
+      justify-content: center;
+      padding: 0 10px; // 根据需要调整内边距
       background-color: $subMenuBg !important;
 
       &:hover {
@@ -90,6 +106,7 @@
       }
     }
   }
+
 
   .hideSidebar {
     .sidebar-container {
@@ -152,6 +169,7 @@
     }
   }
 
+
   .el-menu--collapse .el-menu .el-submenu {
     min-width: $sideBarWidth !important;
   }
@@ -191,6 +209,7 @@
     .svg-icon {
       margin-right: 16px;
     }
+
     .sub-el-icon {
       margin-right: 12px;
       margin-left: -2px;

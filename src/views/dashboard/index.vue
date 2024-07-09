@@ -1,30 +1,36 @@
 <template>
-  <div class="dashboard-container">
-    <div class="dashboard-text">name: {{ name }}</div>
+  <div class="banner">
+    <el-carousel :interval="5000" arrow="always" height="500px">
+      <el-carousel-item v-for="(item, index) in items" :key="index">
+        <el-image :src="item.img" alt="Banner Image" class="carousel-image" />
+      </el-carousel-item>
+    </el-carousel>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-
 export default {
-  name: 'Dashboard',
-  computed: {
-    ...mapGetters([
-      'name'
-    ])
+  data() {
+    return {
+      items: [
+        {
+          img: require('@/assets/banner1.png')
+        },
+        {
+          img: require('@/assets/banner2.png')
+        },
+        {
+          img: require('@/assets/banner3.png')
+        }
+      ]
+    }
   }
 }
 </script>
 
-<style lang="scss" scoped>
-.dashboard {
-  &-container {
-    margin: 30px;
-  }
-  &-text {
-    font-size: 30px;
-    line-height: 46px;
-  }
+<style scoped>
+.carousel-image {
+  width: 100%;
+  height: auto;
 }
 </style>
