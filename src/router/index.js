@@ -3,8 +3,6 @@ import Router from 'vue-router'
 
 Vue.use(Router)
 
-import Index from '@/views/goods/index.vue'
-import Detail from '@/views/goods/detail.vue'
 import Layout from '@/layout'
 
 export const constantRoutes = [
@@ -58,7 +56,7 @@ export const constantRoutes = [
       {
         path: 'index',
         name: 'Goods',
-        component: Index,
+        component: () => import('@/views/goods/index'),
         meta: { title: '全部商品', icon: 'form' }
       }
     ]
@@ -70,7 +68,7 @@ export const constantRoutes = [
       {
         path: '',
         name: 'Detail',
-        component: Detail,
+        component: () => import('@/views/goods/detail'),
         meta: { title: '商品详情', icon: 'form' }
       }
     ]

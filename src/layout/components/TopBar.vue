@@ -31,7 +31,7 @@ export default {
 }
 .header {
     height: auto;
-    width: 60vw;
+    width: 70vw;
     margin: auto;
     display: flex;
     align-items: center;
