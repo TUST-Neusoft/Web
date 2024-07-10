@@ -1,15 +1,19 @@
 <template>
-  <div>
+  <div style="padding: 0 15vw;">
     <div class="price-select">
-      <el-form :inline="true" :model="formInline" class="demo-form-inline"
-        style="margin-left: 20px;align-items: center;">
+      <el-form
+        :inline="true"
+        :model="formInline"
+        class="demo-form-inline"
+        style="margin-left: 20px;align-items: center;"
+      >
         <!-- 第一个输入框 -->
         <el-form-item label="价格区间:">
-          <el-input v-model="formInline.lowprice" placeholder="最低价格"></el-input>
+          <el-input v-model="formInline.lowprice" placeholder="最低价格" />
         </el-form-item>
         <!-- 第二个输入框 -->
         <el-form-item label="-">
-          <el-input v-model="formInline.highprice" placeholder="最高价格"></el-input>
+          <el-input v-model="formInline.highprice" placeholder="最高价格" />
         </el-form-item>
         <!-- 提交按钮 -->
         <el-form-item>
@@ -17,23 +21,27 @@
         </el-form-item>
       </el-form>
 
-      <el-divider></el-divider>
+      <el-divider />
       <div class="horizontal-controls">
         <span>筛选排序:</span>
         <div class="sort-control" @click="toggleSort('price')">
           <span>价格</span>
           <div class="icon-container" :class="{ 'active': activeSort === 'price' }">
-            <i class="el-icon-caret-top" :class="{ 'active': activeSort === 'price' && sortDirection === 'asc' }"></i>
-            <i class="el-icon-caret-bottom"
-              :class="{ 'active': activeSort === 'price' && sortDirection === 'desc' }"></i>
+            <i class="el-icon-caret-top" :class="{ 'active': activeSort === 'price' && sortDirection === 'asc' }" />
+            <i
+              class="el-icon-caret-bottom"
+              :class="{ 'active': activeSort === 'price' && sortDirection === 'desc' }"
+            />
           </div>
         </div>
         <div class="sort-control" @click="toggleSort('sales')">
           <span>销量</span>
           <div class="icon-container" :class="{ 'active': activeSort === 'sales' }">
-            <i class="el-icon-caret-top" :class="{ 'active': activeSort === 'sales' && sortDirection === 'asc' }"></i>
-            <i class="el-icon-caret-bottom"
-              :class="{ 'active': activeSort === 'sales' && sortDirection === 'desc' }"></i>
+            <i class="el-icon-caret-top" :class="{ 'active': activeSort === 'sales' && sortDirection === 'asc' }" />
+            <i
+              class="el-icon-caret-bottom"
+              :class="{ 'active': activeSort === 'sales' && sortDirection === 'desc' }"
+            />
           </div>
         </div>
       </div>
@@ -41,17 +49,27 @@
 
     <div class="container">
       <div class="classes-container"@click="goToDetail()">
-        <classes v-for="(item, index) in displayedClasses" :key="index" :imageUrl="item.imagePath"
-          :title="item.productTitle" :description="item.productDescription" :price="item.productPrice"
-          :sales="item.productsales">
-        </classes>
+        <classes
+          v-for="(item, index) in displayedClasses"
+          :key="index"
+          :image-url="item.imagePath"
+          :title="item.productTitle"
+          :description="item.productDescription"
+          :price="item.productPrice"
+          :sales="item.productsales"
+        />
       </div>
     </div>
     <div class="block" style="margin-top: 60px;margin-left: 250px;margin-right: 250px">
-      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage"
-        :page-sizes="[1, 2, 3, 4, 5]" :page-size.sync="pageSize" layout="total, sizes, prev, pager, next, jumper"
-        :total="filteredClass01.length">
-      </el-pagination>
+      <el-pagination
+        :current-page="currentPage"
+        :page-sizes="[1, 2, 3, 4, 5]"
+        :page-size.sync="pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="filteredClass01.length"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
     </div>
   </div>
 </template>
@@ -59,8 +77,6 @@
 <style scoped>
 .price-select {
   padding-top: 20px;
-  margin-left: 250px;
-  margin-right: 250px;
   margin-top: 50px;
   border-radius: 4px;
   box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
@@ -163,7 +179,7 @@
 <script>
 import classes from './components/classes'
 export default {
-  name: 'index',
+  name: 'Index',
   components: { classes },
   data() {
     return {
@@ -231,70 +247,70 @@ export default {
           productDescription: '产品描述05',
           productPrice: '216.8',
           productsales: '2'
-        },
+        }
       ]
-    };
-  },
-  created() {
-    this.filteredClass01 = JSON.parse(JSON.stringify(this.class01)); // 初始化过滤列表为所有卡片
+    }
   },
   computed: {
     displayedClasses() {
-      const startIndex = (this.currentPage - 1) * this.pageSize;
-      return this.filteredClass01.slice(startIndex, startIndex + this.pageSize);
-    },
+      const startIndex = (this.currentPage - 1) * this.pageSize
+      return this.filteredClass01.slice(startIndex, startIndex + this.pageSize)
+    }
+  },
+  created() {
+    this.filteredClass01 = JSON.parse(JSON.stringify(this.class01)) // 初始化过滤列表为所有卡片
   },
   methods: {
     onSubmit() {
-      let lowPrice = parseFloat(this.formInline.lowprice);
-      let highPrice = parseFloat(this.formInline.highprice);
+      const lowPrice = parseFloat(this.formInline.lowprice)
+      const highPrice = parseFloat(this.formInline.highprice)
 
       // 过滤 class01 数组
       this.filteredClass01 = this.class01.filter(item => {
         return (isNaN(lowPrice) || item.productPrice >= lowPrice) &&
-          (isNaN(highPrice) || item.productPrice <= highPrice);
-      });
+          (isNaN(highPrice) || item.productPrice <= highPrice)
+      })
 
       // 重置分页到第一页
-      this.currentPage = 1;
+      this.currentPage = 1
     },
 
     // 这里可以添加提交表单的逻辑
     handleSizeChange(val) {
-      this.pageSize = val; // 更新每页显示条数
-      this.currentPage = 1; // 每次修改每页显示条数时，重置当前页为第一页
-      console.log(`每页 ${val} 条`);
+      this.pageSize = val // 更新每页显示条数
+      this.currentPage = 1 // 每次修改每页显示条数时，重置当前页为第一页
+      console.log(`每页 ${val} 条`)
     },
     handleCurrentChange(val) {
-      this.currentPage = val; // 更新当前页
-      console.log(`当前页: ${val}`);
+      this.currentPage = val // 更新当前页
+      console.log(`当前页: ${val}`)
     },
     toggleSort(sortType) {
       if (this.activeSort !== sortType) {
-        this.activeSort = sortType;
-        this.sortDirection = 'asc';
+        this.activeSort = sortType
+        this.sortDirection = 'asc'
       } else {
-        this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+        this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc'
       }
 
       this.filteredClass01.sort((a, b) => {
         if (sortType === 'price') {
           return this.sortDirection === 'asc'
             ? parseFloat(a.productPrice) - parseFloat(b.productPrice)
-            : parseFloat(b.productPrice) - parseFloat(a.productPrice);
+            : parseFloat(b.productPrice) - parseFloat(a.productPrice)
         } else if (sortType === 'sales') {
           return this.sortDirection === 'asc'
             ? parseInt(a.productsales, 10) - parseInt(b.productsales, 10)
-            : parseInt(b.productsales, 10) - parseInt(a.productsales, 10);
+            : parseInt(b.productsales, 10) - parseInt(a.productsales, 10)
         }
-      });
+      })
 
       // 重置分页到第一页
-      this.currentPage = 1;
-    }, 
-    goToDetail() {
-      this.$router.push({ name: 'Detail' });
+      this.currentPage = 1
     },
+    goToDetail() {
+      this.$router.push({ name: 'Detail' })
+    }
   }
 }
 </script>
