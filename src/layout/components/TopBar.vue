@@ -9,7 +9,7 @@
       </div>
       <div style="float: right;height: 100%;">
         欢迎您，KBEI |
-        <router-link to="/personal-center">个人中心</router-link> |
+        <router-link to="/user">个人中心</router-link> |
         <a @click="logout">注销登录</a>
       </div>
     </div>

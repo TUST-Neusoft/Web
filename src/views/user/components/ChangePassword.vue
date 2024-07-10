@@ -3,10 +3,10 @@
     <h2 class="title">密码修改</h2>
     <el-form :model="form" label-width="80px" class="form">
       <el-form-item label="新密码" required>
-        <el-input v-model="form.newPassword" type="password" placeholder="请输入新密码"></el-input>
+        <el-input v-model="form.newPassword" type="password" placeholder="请输入新密码" />
       </el-form-item>
       <el-form-item label="重复密码" required>
-        <el-input v-model="form.confirmPassword" type="password" placeholder="请再次输入新密码"></el-input>
+        <el-input v-model="form.confirmPassword" type="password" placeholder="请再次输入新密码" />
       </el-form-item>
       <el-form-item class="form-buttons">
         <el-button type="primary" @click="changePassword">修改密码</el-button>
@@ -17,6 +17,8 @@
 </template>
 
 <script>
+import { updatePassword } from '@/api/user'
+
 export default {
   data() {
     return {
@@ -24,23 +26,24 @@ export default {
         newPassword: '',
         confirmPassword: ''
       }
-    };
+    }
   },
   methods: {
-    changePassword() {
+    async changePassword() {
       // 修改密码逻辑
       if (this.form.newPassword === this.form.confirmPassword) {
-        this.$message.success('密码修改成功');
+        const response = await updatePassword(this.form.confirmPassword)
+        this.$message.success('密码修改成功')
       } else {
-        this.$message.error('两次输入的密码不一致');
+        this.$message.error('两次输入的密码不一致')
       }
     },
     resetForm() {
-      this.form.newPassword = '';
-      this.form.confirmPassword = '';
+      this.form.newPassword = ''
+      this.form.confirmPassword = ''
     }
   }
-};
+}
 </script>
 
 <style scoped>

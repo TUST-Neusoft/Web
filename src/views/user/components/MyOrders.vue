@@ -4,22 +4,22 @@
     <el-form :inline="true" :model="filters" class="filter-form">
       <el-form-item label="订单类型">
         <el-select v-model="filters.status" placeholder="全部订单">
-          <el-option label="全部订单" value="0"></el-option>
-          <el-option label="未支付" value="-1"></el-option>
-          <el-option label="待发货" value="2"></el-option>
-          <el-option label="已发货" value="3"></el-option>
-          <el-option label="已完成" value="9"></el-option>
-          <el-option label="已关闭" value="-9"></el-option>
+          <el-option label="全部订单" value="0" />
+          <el-option label="未支付" value="-1" />
+          <el-option label="待发货" value="2" />
+          <el-option label="已发货" value="3" />
+          <el-option label="已完成" value="9" />
+          <el-option label="已关闭" value="-9" />
         </el-select>
       </el-form-item>
       <el-form-item label="订单号">
-        <el-input v-model="filters.orderNo" placeholder="请输入订单号"></el-input>
+        <el-input v-model="filters.orderNo" placeholder="请输入订单号" />
       </el-form-item>
       <el-form-item label="开始时间">
-        <el-date-picker v-model="filters.startTime" type="date" placeholder="选择开始时间"></el-date-picker>
+        <el-date-picker v-model="filters.startTime" type="date" placeholder="选择开始时间" />
       </el-form-item>
       <el-form-item label="结束时间">
-        <el-date-picker v-model="filters.endTime" type="date" placeholder="选择结束时间"></el-date-picker>
+        <el-date-picker v-model="filters.endTime" type="date" placeholder="选择结束时间" />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="fetchOrders">搜索</el-button>
@@ -29,11 +29,11 @@
     <div v-for="order in orders" :key="order.orderNo" class="order">
       <div class="order-header">
         <span>订单号：{{ order.orderNo }}</span>
-        <span>状态：<el-tag :type="getStatusType(order.status)">{{ getStatusLabel(order.status) }}</el-tag></span>
+        <span>状态：<el-tag :type="getStatusType(order.orderState)">{{ getStatusLabel(order.orderState) }}</el-tag></span>
         <span>{{ order.orderTime }}</span>
       </div>
       <div v-for="item in order.items" :key="item.id" class="order-item">
-        <img :src="item.image" class="item-image" />
+        <img :src="item.image" class="item-image">
         <div class="item-info">
           <div class="item-details">
             <span class="item-name">{{ item.name }}</span>
@@ -53,13 +53,14 @@
         layout="prev, pager, next"
         :total="totalOrders"
         :page-size="pageSize"
-        @current-change="handlePageChange">
-      </el-pagination>
+        @current-change="handlePageChange"
+      />
     </div>
   </div>
 </template>
 
 <script>
+import { getMyOrders } from '@/api/orders'
 export default {
   data() {
     return {
@@ -74,36 +75,40 @@ export default {
       totalOrders: 0,
       pageSize: 10,
       currentPage: 1
-    };
+    }
+  },
+  mounted() {
+    this.fetchOrders()
+    this.getMyOrders()
   },
   methods: {
     fetchOrders() {
-      this.loading = true;
+      this.loading = true
       setTimeout(() => {
-        const filteredOrders = this.mockOrders().filter(order => {
-          const statusMatch = this.filters.status === '0' || order.status.toString() === this.filters.status;
-          const orderNoMatch = !this.filters.orderNo || order.orderNo.includes(this.filters.orderNo);
-          const startTimeMatch = !this.filters.startTime || new Date(order.orderTime) >= new Date(this.filters.startTime);
-          const endTimeMatch = !this.filters.endTime || new Date(order.orderTime) <= new Date(this.filters.endTime);
-          return statusMatch && orderNoMatch && startTimeMatch && endTimeMatch;
-        });
-        this.totalOrders = filteredOrders.length;
-        const start = (this.currentPage - 1) * this.pageSize;
-        const end = start + this.pageSize;
-        this.orders = filteredOrders.slice(start, end);
-        this.loading = false;
-      }, 500);
+        const filteredOrders = this.orders.filter(order => {
+          const statusMatch = this.filters.status === '0' || order.status.toString() === this.filters.status
+          const orderNoMatch = !this.filters.orderNo || order.orderNo.includes(this.filters.orderNo)
+          const startTimeMatch = !this.filters.startTime || new Date(order.orderTime) >= new Date(this.filters.startTime)
+          const endTimeMatch = !this.filters.endTime || new Date(order.orderTime) <= new Date(this.filters.endTime)
+          return statusMatch && orderNoMatch && startTimeMatch && endTimeMatch
+        })
+        this.totalOrders = filteredOrders.length
+        const start = (this.currentPage - 1) * this.pageSize
+        const end = start + this.pageSize
+        this.orders = filteredOrders.slice(start, end)
+        this.loading = false
+      }, 500)
     },
     resetFilters() {
-      this.filters.status = '0';
-      this.filters.orderNo = '';
-      this.filters.startTime = '';
-      this.filters.endTime = '';
-      this.fetchOrders();
+      this.filters.status = '0'
+      this.filters.orderNo = ''
+      this.filters.startTime = ''
+      this.filters.endTime = ''
+      this.fetchOrders()
     },
     handlePageChange(page) {
-      this.currentPage = page;
-      this.fetchOrders();
+      this.currentPage = page
+      this.fetchOrders()
     },
     getStatusLabel(status) {
       const statusLabels = {
@@ -112,8 +117,8 @@ export default {
         '3': '已发货',
         '9': '已完成',
         '-9': '已关闭'
-      };
-      return statusLabels[status] || '未知状态';
+      }
+      return statusLabels[status] || '未知状态'
     },
     getStatusType(status) {
       const statusTypes = {
@@ -122,41 +127,15 @@ export default {
         '3': 'primary',
         '9': 'success',
         '-9': 'danger'
-      };
-      return statusTypes[status] || 'info';
-    },
-    mockOrders() {
-      const orders = [];
-      const statuses = [-1, 2, 3, 9, -9];
-      const names = ['上海寻宝记', '蒙牛早餐奶原麦250ml*16', '漫画中国成语'];
-      for (let i = 0; i < 10; i++) {
-        orders.push({
-          orderNo: `20240425104438650532${i}`,
-          items: [
-            { id: 1, name: names[i % 3], image: 'https://via.placeholder.com/50', price: 36, quantity: 2 },
-            { id: 2, name: names[(i + 1) % 3], image: 'https://via.placeholder.com/50', price: 216, quantity: 2 }
-          ],
-          totalPrice: 504,
-          status: statuses[i % statuses.length],
-          orderTime: `2024-04-25 10:44:39`
-        });
-        orders.push({
-          orderNo: `2023051513450738912264${i}`,
-          items: [
-            { id: 3, name: names[(i + 2) % 3], image: 'https://via.placeholder.com/50', price: 36, quantity: 2 }
-          ],
-          totalPrice: 72,
-          status: statuses[(i + 1) % statuses.length],
-          orderTime: `2023-05-15 13:54:06`
-        });
       }
-      return orders;
+      return statusTypes[status] || 'info'
+    },
+    async getMyOrders() {
+      const response = await getMyOrders()
+      this.orders = response.data
     }
-  },
-  mounted() {
-    this.fetchOrders();
   }
-};
+}
 </script>
 
 <style scoped>

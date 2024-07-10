@@ -48,15 +48,16 @@
     </div>
 
     <div class="container">
-      <div class="classes-container"@click="goToDetail()">
+      <div class="classes-container">
         <classes
           v-for="(item, index) in displayedClasses"
           :key="index"
-          :image-url="item.imagePath"
-          :title="item.productTitle"
-          :description="item.productDescription"
-          :price="item.productPrice"
+          :image-url="item.goodsPicture"
+          :title="item.goodsName"
+          :description="item.goodsIntroduce"
+          :price="item.goodsMarketPrice"
           :sales="item.productsales"
+          :goods-no="item.goodsNo"
         />
       </div>
     </div>
@@ -73,6 +74,149 @@
     </div>
   </div>
 </template>
+
+<script>
+import classes from './components/classes'
+import { getAll } from '@/api/goods'
+
+export default {
+  name: 'Index',
+  components: { classes },
+  data() {
+    return {
+      tableData: [
+      ],
+      filteredClass01: [], // 用于存储过滤后的卡片列表
+      activeSort: null, // 当前选中的排序类型（'price' 或 'sales'）
+      sortDirection: 'asc', // 默认排序方向
+      currentPage: 1,
+      pageSize: 4,
+      formInline: {
+        lowprice: '',
+        highprice: ''
+      },
+      options: [{
+        value: '选项1',
+        label: '1条/页'
+      }, {
+        value: '选项2',
+        label: '2条/页'
+      }, {
+        value: '选项3',
+        label: '3条/页'
+      }, {
+        value: '选项4',
+        label: '4条/页'
+      }, {
+        value: '选项5',
+        label: '5条/页'
+      }],
+      value: '',
+      class01: [
+        {
+          imagePath: require('@/assets/404_images/milk02.jpg'), // 确保这是正确的图片路径
+          productTitle: '精选牧场一号',
+          productDescription: '产品描述01',
+          productPrice: '100.5',
+          productsales: '10'
+        },
+        // 如果需要，可以继续添加更多对象
+        {
+          imagePath: require('@/assets/404_images/R.jpg'), // 确保这是正确的图片路径
+          productTitle: '纯牛奶一号',
+          productDescription: '产品描述02',
+          productPrice: '216.8',
+          productsales: '2'
+        },
+        {
+          imagePath: require('@/assets/404_images/milk02.jpg'), // 确保这是正确的图片路径
+          productTitle: '精选牧场二号',
+          productDescription: '产品描述03',
+          productPrice: '375.0',
+          productsales: '6'
+        },
+        {
+          imagePath: require('@/assets/404_images/R.jpg'), // 确保这是正确的图片路径
+          productTitle: '纯牛奶二号',
+          productDescription: '产品描述04',
+          productPrice: '260.8',
+          productsales: '8'
+        },
+        {
+          imagePath: require('@/assets/404_images/R.jpg'), // 确保这是正确的图片路径
+          productTitle: '纯牛奶三号',
+          productDescription: '产品描述05',
+          productPrice: '216.8',
+          productsales: '2'
+        }
+      ]
+    }
+  },
+  computed: {
+    displayedClasses() {
+      const startIndex = (this.currentPage - 1) * this.pageSize
+      return this.filteredClass01.slice(startIndex, startIndex + this.pageSize)
+    }
+  },
+  created() {
+    this.getAll()
+  },
+  methods: {
+    onSubmit() {
+      const lowPrice = parseFloat(this.formInline.lowprice)
+      const highPrice = parseFloat(this.formInline.highprice)
+
+      // 过滤 class01 数组
+      this.filteredClass01 = this.class01.filter(item => {
+        return (isNaN(lowPrice) || item.productPrice >= lowPrice) &&
+          (isNaN(highPrice) || item.productPrice <= highPrice)
+      })
+
+      // 重置分页到第一页
+      this.currentPage = 1
+    },
+
+    // 这里可以添加提交表单的逻辑
+    handleSizeChange(val) {
+      this.pageSize = val // 更新每页显示条数
+      this.currentPage = 1 // 每次修改每页显示条数时，重置当前页为第一页
+      console.log(`每页 ${val} 条`)
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val // 更新当前页
+      console.log(`当前页: ${val}`)
+    },
+    toggleSort(sortType) {
+      if (this.activeSort !== sortType) {
+        this.activeSort = sortType
+        this.sortDirection = 'asc'
+      } else {
+        this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc'
+      }
+
+      this.filteredClass01.sort((a, b) => {
+        if (sortType === 'price') {
+          return this.sortDirection === 'asc'
+            ? parseFloat(a.productPrice) - parseFloat(b.productPrice)
+            : parseFloat(b.productPrice) - parseFloat(a.productPrice)
+        } else if (sortType === 'sales') {
+          return this.sortDirection === 'asc'
+            ? parseInt(a.productsales, 10) - parseInt(b.productsales, 10)
+            : parseInt(b.productsales, 10) - parseInt(a.productsales, 10)
+        }
+      })
+
+      // 重置分页到第一页
+      this.currentPage = 1
+    },
+    async getAll() {
+      const response = await getAll()
+      this.class01 = response.data
+      this.filteredClass01 = JSON.parse(JSON.stringify(this.class01))
+    }
+  }
+}
+</script>
 
 <style scoped>
 .price-select {
@@ -176,141 +320,3 @@
   /* 降序时下三角图标颜色 */
 }
 </style>
-<script>
-import classes from './components/classes'
-export default {
-  name: 'Index',
-  components: { classes },
-  data() {
-    return {
-      tableData: [
-      ],
-      filteredClass01: [], // 用于存储过滤后的卡片列表
-      activeSort: null, // 当前选中的排序类型（'price' 或 'sales'）
-      sortDirection: 'asc', // 默认排序方向
-      currentPage: 1,
-      pageSize: 4,
-      formInline: {
-        lowprice: '',
-        highprice: ''
-      },
-      options: [{
-        value: '选项1',
-        label: '1条/页'
-      }, {
-        value: '选项2',
-        label: '2条/页'
-      }, {
-        value: '选项3',
-        label: '3条/页'
-      }, {
-        value: '选项4',
-        label: '4条/页'
-      }, {
-        value: '选项5',
-        label: '5条/页'
-      }],
-      value: '',
-      class01: [
-        {
-          imagePath: require('@/assets/404_images/milk02.jpg'), // 确保这是正确的图片路径
-          productTitle: '精选牧场一号',
-          productDescription: '产品描述01',
-          productPrice: '100.5',
-          productsales: '10'
-        },
-        // 如果需要，可以继续添加更多对象
-        {
-          imagePath: require('@/assets/404_images/R.jpg'), // 确保这是正确的图片路径
-          productTitle: '纯牛奶一号',
-          productDescription: '产品描述02',
-          productPrice: '216.8',
-          productsales: '2'
-        },
-        {
-          imagePath: require('@/assets/404_images/milk02.jpg'), // 确保这是正确的图片路径
-          productTitle: '精选牧场二号',
-          productDescription: '产品描述03',
-          productPrice: '375.0',
-          productsales: '6'
-        },
-        {
-          imagePath: require('@/assets/404_images/R.jpg'), // 确保这是正确的图片路径
-          productTitle: '纯牛奶二号',
-          productDescription: '产品描述04',
-          productPrice: '260.8',
-          productsales: '8'
-        },
-        {
-          imagePath: require('@/assets/404_images/R.jpg'), // 确保这是正确的图片路径
-          productTitle: '纯牛奶三号',
-          productDescription: '产品描述05',
-          productPrice: '216.8',
-          productsales: '2'
-        }
-      ]
-    }
-  },
-  computed: {
-    displayedClasses() {
-      const startIndex = (this.currentPage - 1) * this.pageSize
-      return this.filteredClass01.slice(startIndex, startIndex + this.pageSize)
-    }
-  },
-  created() {
-    this.filteredClass01 = JSON.parse(JSON.stringify(this.class01)) // 初始化过滤列表为所有卡片
-  },
-  methods: {
-    onSubmit() {
-      const lowPrice = parseFloat(this.formInline.lowprice)
-      const highPrice = parseFloat(this.formInline.highprice)
-
-      // 过滤 class01 数组
-      this.filteredClass01 = this.class01.filter(item => {
-        return (isNaN(lowPrice) || item.productPrice >= lowPrice) &&
-          (isNaN(highPrice) || item.productPrice <= highPrice)
-      })
-
-      // 重置分页到第一页
-      this.currentPage = 1
-    },
-
-    // 这里可以添加提交表单的逻辑
-    handleSizeChange(val) {
-      this.pageSize = val // 更新每页显示条数
-      this.currentPage = 1 // 每次修改每页显示条数时，重置当前页为第一页
-      console.log(`每页 ${val} 条`)
-    },
-    handleCurrentChange(val) {
-      this.currentPage = val // 更新当前页
-      console.log(`当前页: ${val}`)
-    },
-    toggleSort(sortType) {
-      if (this.activeSort !== sortType) {
-        this.activeSort = sortType
-        this.sortDirection = 'asc'
-      } else {
-        this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc'
-      }
-
-      this.filteredClass01.sort((a, b) => {
-        if (sortType === 'price') {
-          return this.sortDirection === 'asc'
-            ? parseFloat(a.productPrice) - parseFloat(b.productPrice)
-            : parseFloat(b.productPrice) - parseFloat(a.productPrice)
-        } else if (sortType === 'sales') {
-          return this.sortDirection === 'asc'
-            ? parseInt(a.productsales, 10) - parseInt(b.productsales, 10)
-            : parseInt(b.productsales, 10) - parseInt(a.productsales, 10)
-        }
-      })
-
-      // 重置分页到第一页
-      this.currentPage = 1
-    },
-    goToDetail() {
-      this.$router.push({ name: 'Detail' })
-    }
-  }
-}
-</script>

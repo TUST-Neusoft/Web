@@ -1,8 +1,9 @@
 <template>
-    <div class="container">
-      <el-container>
-        <el-aside width="200px">
-          <el-menu :default-active="activeMenu" @select="handleSelect">
+  <div class="container">
+    <el-row :gutter="10">
+      <el-col :span="6">
+        <el-card style="width:100%">
+          <el-menu :default-active="activeMenu" style="border-right: 0" @select="handleSelect">
             <el-submenu index="1">
               <template slot="title">会员中心</template>
               <el-menu-item index="1-1">个人资料</el-menu-item>
@@ -20,75 +21,97 @@
               <el-menu-item index="3-3">消费记录</el-menu-item>
             </el-submenu>
           </el-menu>
-        </el-aside>
-  
-        <el-container>
-          <el-header> <!-- header内容 --> </el-header>
-          
+        </el-card>
+      </el-col>
+      <el-col :span="18">
+        <el-card>
           <el-main>
             <div v-if="activeMenu === '1-1'">
-              <personal-info></personal-info>
+              <personal-info :user-data="userData" />
             </div>
             <div v-if="activeMenu === '1-2'">
-              <change-password></change-password>
+              <change-password />
             </div>
             <div v-if="activeMenu === '1-3'">
-              <my-collections></my-collections>
+              <my-collections />
             </div>
             <div v-if="activeMenu === '2-1'">
-              <my-orders></my-orders>
+              <my-orders />
             </div>
             <div v-if="activeMenu === '3-1'">
-              <recharge></recharge>
+              <recharge />
             </div>
             <div v-if="activeMenu === '3-2'">
-              <transfer></transfer>
+              <transfer />
             </div>
             <div v-if="activeMenu === '3-3'">
-              <expense-records></expense-records>
+              <expense-records />
             </div>
           </el-main>
-        </el-container>
-      </el-container>
-    </div>
-  </template>
-  
-  <script>
-  import PersonalInfo from '@/views/user/components/PersonalInfo.vue';
-  import ChangePassword from '@/views/user/components/ChangePassword.vue';
-  import MyCollections from '@/views/user/components/MyCollections.vue';
-  import MyOrders from '@/views/user/components/MyOrders.vue';
-  import Recharge from '@/views/user/components/Recharge.vue';
-  import Transfer from '@/views/user/components/Transfer.vue';
-  import ExpenseRecords from '@/views/user/components/ExpenseRecords.vue';
-  
-  export default {
-    components: {
-      PersonalInfo,
-      ChangePassword,
-      MyCollections,
-      MyOrders,
-      Recharge,
-      Transfer,
-      ExpenseRecords,
-    },
-    data() {
-      return {
-        activeMenu: '1-1' // 默认显示个人资料页面
-      };
-    },
-    methods: {
-      handleSelect(key) {
-        this.activeMenu = key;
+        </el-card>
+      </el-col>
+    </el-row>
+  </div>
+</template>
+
+<script>
+import PersonalInfo from './components/PersonalInfo.vue'
+import ChangePassword from './components/ChangePassword.vue'
+import MyCollections from './components/MyCollections.vue'
+import MyOrders from './components/MyOrders.vue'
+import Recharge from './components/Recharge.vue'
+import Transfer from './components/Transfer.vue'
+import ExpenseRecords from './components/ExpenseRecords.vue'
+import { getUser } from '@/api/user'
+
+export default {
+  components: {
+    PersonalInfo,
+    ChangePassword,
+    MyCollections,
+    MyOrders,
+    Recharge,
+    Transfer,
+    ExpenseRecords
+  },
+  data() {
+    return {
+      activeMenu: '1-1',
+      userData: {
+        avatar: null,
+        createTime: null,
+        id: null,
+        lastLoginTime: null,
+        mail: null,
+        phone: '',
+        sex: null,
+        updateTime: null,
+        userName: '',
+        userPassword: null,
+        userStatus: 0
       }
     }
-  };
-  </script>
-  
-  <style>
-  .container {
-    width: 1200px;
-    margin: 0 auto;
+  },
+  async mounted() {
+    await this.getUser()
+  },
+  methods: {
+    handleSelect(key) {
+      this.activeMenu = key
+    },
+    async getUser() {
+      const response = await getUser()
+      this.userData = response.data
+    }
   }
-  </style>
-  
+}
+</script>
+
+<style>
+.container {
+  width: 100%;
+  height: 100%;
+  padding: 20px 15vw;
+  background-color: #f8f8f8;
+}
+</style>

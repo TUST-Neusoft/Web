@@ -83,7 +83,7 @@ export const constantRoutes = [
     component: Layout,
     children: [
       {
-        path: 'index',
+        path: '',
         name: 'Cart',
         component: () => import('@/views/cart/index'),
         meta: { title: '购物车', icon: 'form' }
@@ -95,7 +95,7 @@ export const constantRoutes = [
     component: Layout,
     children: [
       {
-        path: 'index',
+        path: '',
         name: 'User',
         component: () => import('@/views/user/index'),
         meta: { title: '用户', icon: 'form' }
