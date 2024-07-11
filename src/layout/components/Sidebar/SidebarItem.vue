@@ -111,7 +111,7 @@ export default {
 .selected-item {
   /* border-left: 4px solid #0096ff; */
   background-color: #4169E1 !important;
-  height: 50px;
+  height: 100%;
   line-height: 50px;
 }
 

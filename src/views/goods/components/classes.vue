@@ -1,37 +1,42 @@
 <template>
-    <div class="webpage">
-      <el-card class="custom-card" shadow="hover">
-        <div class="image-container">
-          <el-image :src="require('@/assets/404_images/mengniu-logo.png')" :fit="fit" class="image-title" alt="Product Image" />
-          <el-image :src="imageUrl" :fit="fit" class="image" alt="Product Image" />
-        </div>
-        <div class="content">
-          <div class="price">{{ price }}</div>
-          <h2 class="title">{{ title }}</h2>
-          <p class="description">{{ description }}</p>
-          <div class="sales">销量: {{ sales }}</div>
-        </div>
-      </el-card>
-    </div>
-  </template>
-  
-  <script>
-  export default {
-      name: 'ProductPage',
-      props: ['imageUrl', 'title', 'description', 'price','sales'],
-      data() {
-          return {
-              fit: 'contain'
-          };
-      }
-  };
-  </script>
-  
+  <div class="webpage" @click="goToDetail(goodsNo)">
+    <el-card class="custom-card" shadow="hover">
+      <div class="image-container">
+        <el-image :src="require('@/assets/404_images/mengniu-logo.png')" :fit="fit" class="image-title" alt="Product Image" />
+        <el-image :src="imageUrl" :fit="fit" class="image" alt="Product Image" />
+      </div>
+      <div class="content">
+        <div class="price">{{ price }}</div>
+        <h2 class="title">{{ title }}</h2>
+        <p class="description">{{ description }}</p>
+        <div class="sales">销量: {{ sales }}</div>
+      </div>
+    </el-card>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'ProductPage',
+  props: ['goodsNo', 'imageUrl', 'title', 'description', 'price', 'sales'],
+  data() {
+    return {
+      fit: 'contain'
+    }
+  },
+  methods: {
+    goToDetail(goodsNo) {
+      this.$router.push({ name: 'Detail', query: { goodsNo: goodsNo }})
+    }
+  }
+}
+</script>
+
   <style scoped>
   .image-container {
       display: flex;
       flex-direction: column;
-  
+
   }
   .custom-card {
     width: 300px; /* 自定义卡片宽度 */
@@ -49,16 +54,16 @@
       width: 20%;
       height: 20%;
   }
-  
+
   .image {
       width: 100%;
       height: 100%;
   }
-  
+
   .content {
       margin-left: 5px
   }
-  
+
   .price {
       color: red;
       font-weight: bold;
