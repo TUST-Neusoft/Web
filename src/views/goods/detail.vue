@@ -15,12 +15,8 @@
               <!-- 显示当前索引范围内的图片 -->
               <el-row :gutter="20">
                 <el-col v-for="(imageSrc, index) in displayImages" :key="index" :span="6">
-                  <el-image
-                    :src="imageSrc"
-                    fit="fill"
-                    class="image-list-item"
-                    @click="selectImage(index + startIndex)"
-                  />
+                  <el-image :src="imageSrc" fit="fill" class="image-list-item"
+                    @click="selectImage(index + startIndex)" />
                 </el-col>
               </el-row>
               <i class="el-icon-arrow-right" style="color: black;" @click="moveRight" />
@@ -39,8 +35,7 @@
 
         <div class="product-main">
           <p class="product-price" style="margin-left:20px;">门店价格：<span
-            style="color: red;font-weight: bold;font-size: 25px;"
-          >￥{{ goods.goodsMarketPrice }}</span></p>
+              style="color: red;font-weight: bold;font-size: 25px;">￥{{ goods.goodsPrice }}</span></p>
           <p style="color: gray;margin-left:20px;">市场价格：￥{{ market - price }}</p>
           <p style="margin-left:20px;">累计销量：{{ sales }}件</p>
           <p style="margin-left:20px;">收藏次数：{{ pickup - times }}</p>
@@ -58,14 +53,17 @@
           <p style="color: gray;">购买数量：</p>
           <el-input-number v-model="num" :min="1" :max="10" label="描述文字" @change="handleChange" />
         </div>
-        <el-button style="margin-top: 50px;" type="primary" icon="el-icon-shopping-cart-2">加入购物车</el-button>
+        <el-button style="margin-top: 50px;" type="primary" icon="el-icon-shopping-cart-2"
+          @click="Cartsadd">加入购物车</el-button>
       </el-main>
 
     </el-container>
 
     <el-form ref="form" :model="form" label-width="80px" class="custom-form">
       <el-tabs v-model="activeName">
-        <el-tab-pane label="商品详情" style="font-size: 18px;" name="first"><div class="editor-content" v-html="goods.goodsContent" /></el-tab-pane>
+        <el-tab-pane label="商品详情" style="font-size: 18px;" name="first">
+          <div class="editor-content" v-html="goods.goodsContent" />
+        </el-tab-pane>
       </el-tabs>
     </el-form>
   </div>
@@ -73,7 +71,7 @@
 
 <script>
 import { getDetail } from '@/api/goods'
-
+import { addCarts } from '@/api/carts';
 export default {
   name: 'Detail',
   data() {
@@ -129,6 +127,7 @@ export default {
       description: '蒙牛早餐奶原麦250ml*16',
       price: 100,
       num: 1,
+      goodsNo: '',
       goods: {
 
       }
@@ -166,6 +165,7 @@ export default {
   },
   mounted() {
     this.getDetail()
+    this.addCarts()
   },
   methods: {
     selectImage(index) {
@@ -206,9 +206,16 @@ export default {
     toggleFavorite() {
       this.isFavorited = !this.isFavorited
     },
+    async Cartsadd() {
+      const response = await addCarts(this.goodsNo, this.storeNo, this.num);
+      if (response.code === 0) {
+        this.$message.success('成功添加购物车'),
+        this.num=1;
+      }
+    },
     async getDetail() {
-      const goodsNo = this.$route.query.goodsNo
-      const response = await getDetail(goodsNo)
+      this.goodsNo = this.$route.query.goodsNo
+      const response = await getDetail(this.goodsNo)
       this.goods = response.data
     }
   }
@@ -293,6 +300,7 @@ body>.el-container {
   align-items: center;
   justify-content: flex-start;
 }
+
 .custom-form {
   border: 1px solid #ccc;
   border-radius: 2px;

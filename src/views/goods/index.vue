@@ -55,11 +55,12 @@
           :image-url="item.goodsPicture"
           :title="item.goodsName"
           :description="item.goodsIntroduce"
-          :price="item.goodsMarketPrice"
+          :price="item.goodsPrice"
           :sales="item.productsales"
           :goods-no="item.goodsNo"
         />
       </div>
+
     </div>
     <div class="block" style="margin-top: 60px;margin-left: 250px;margin-right: 250px">
       <el-pagination
@@ -197,8 +198,8 @@ export default {
       this.filteredClass01.sort((a, b) => {
         if (sortType === 'price') {
           return this.sortDirection === 'asc'
-            ? parseFloat(a.productPrice) - parseFloat(b.productPrice)
-            : parseFloat(b.productPrice) - parseFloat(a.productPrice)
+            ? parseFloat(a.goodsPrice) - parseFloat(b.goodsPrice)
+            : parseFloat(b.goodsPrice) - parseFloat(a.goodsPrice)
         } else if (sortType === 'sales') {
           return this.sortDirection === 'asc'
             ? parseInt(a.productsales, 10) - parseInt(b.productsales, 10)
