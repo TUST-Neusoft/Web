@@ -40,6 +40,7 @@
 
 <script>
 import Tinymce from '@/components/Tinymce'
+import { getAll } from '@/apicomplaint/'
 
 export default {
   name: 'TinymceDemo',
@@ -55,8 +56,13 @@ export default {
       ]
     }
   },
-
+  created () {
+    this.getAll()
+  },
   methods: {
+    onsubmit () {
+
+    },
     changeWang (html) {
       this.WangValue = html
       console.log(this.WangValue)
@@ -67,6 +73,11 @@ export default {
     handleItemClick (row) {
       // 处理点击事件，可以在这里添加具体的逻辑，比如打开详情页等操作
       console.log('点击了事项内容：', row)
+    },
+    async getAll () {
+      const response = await getAll()
+      this.class01 response.data
+      this.filteredClass01 = JSON.parse(JSON.stringify(this, class01))
     }
   }
 }

@@ -37,6 +37,8 @@
 </template>
 
 <script>
+import { getAll } from '@/api/charge/'
+
 export default {
   data () {
     return {
@@ -57,7 +59,14 @@ export default {
       totalAmount: 0 // 总缴费金额，根据实际业务逻辑处理
     }
   },
+  created () {
+    this.getAll()
+  },
+
   methods: {
+    onsubmit () {
+
+    },
     formatCurrency (row, column, cellValue, index) {
       return '¥' + cellValue
     },
@@ -75,6 +84,11 @@ export default {
       // 计算总金额的方法，根据实际需求实现
       // 这里示例简单地返回第一个账单的金额
       return this.tableData.length > 0 ? this.tableData[0].amount : 0
+    },
+    async getAll () {
+      const response = await getAll()
+      this.class01 response.data
+      this.filteredClass01 = JSON.parse(JSON.stringify(this, class01))
     }
   }
 }

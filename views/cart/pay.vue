@@ -55,10 +55,13 @@
 </template>
 
 <script>
+import { getMyWallet } from '@/api/wallet'
+
 export default {
   data () {
     return {
       active: 1,
+      balance: 0,
       tableData: [
         { productInformation: '商品A', monovalent: 100, quantity: 2, subtotal: 200 },
         { productInformation: '商品B', monovalent: 150, quantity: 3, subtotal: 450 },
@@ -66,7 +69,6 @@ export default {
       ],
       initialTotalAmount: 1050, // 示例总金额
       balanceDialogVisible: false,
-      balance: 500, // 示例余额
       paymentPassword: '',
       qrCodeDialogVisible: false,
       qrCodeType: '', // 微信或支付宝
@@ -82,8 +84,21 @@ export default {
       return total
     }
   },
-
+  created () {
+    this.getMyWallet() // 调用获取数据的方法
+  },
   methods: {
+    async getMyWallet () {
+      try {
+        const response = await getMyWallet()
+        this.balance = response.data.balance
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      }
+    },
+    onSubmit () {
+      // 留空，或者添加实际的表单提交逻辑
+    },
     showBalanceDialog () {
       this.balanceDialogVisible = true
     },
@@ -93,7 +108,7 @@ export default {
       // 这里可以添加实际的支付逻辑，比如向后端发送请求
       // 支付成功后显示成功信息和按钮
       // 使用 $router.push 进行页面跳转
-      this.$router.push('paysucceed')
+      this.$router.push('/paysucceed') // 确保路由路径是正确的
     },
     showQRCode (type) {
       if (type === 'wechat') {
@@ -108,7 +123,6 @@ export default {
     }
   }
 }
-
 </script>
 
 <style>
@@ -116,7 +130,6 @@ export default {
   margin: 30px;
   padding: 30px;
   border-radius: 10px;
-  width: auto;
 }
 
 .custom-steps {

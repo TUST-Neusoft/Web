@@ -1,112 +1,183 @@
 <template>
-  <div class="container1">
-    <el-breadcrumb separator="/">
-      <el-breadcrumb-item class="breadcrumb-bold">报事报修</el-breadcrumb-item>
-    </el-breadcrumb>
+  <div class="container">
+    <el-steps :active="active" finish-status="success" class="custom-steps" align-center>
+      <el-step title="选择支付方式" />
+      <el-step title="支付成功" />
+    </el-steps>
 
-    <div class="custom-tinymce-container">
-      <tinymce v-model="content" :height="300" />
+    <div class="title1">
+      <h2>订单商品信息</h2>
+      <h4>订单号：{{ totalAmount }}</h4>
     </div>
 
-    <div class="components-container">
+    <el-table :data="tableData" style="width: 100%">
+      <el-table-column prop="productInformation" label="商品信息" width="800" />
+      <el-table-column prop="monovalent" label="单价" width="200" />
+      <el-table-column prop="quantity" label="数量" width="200" />
+      <el-table-column prop="subtotal" label="小计" />
+    </el-table>
 
-      <el-button type="primary" class="button" @click="sendData">发送</el-button>
-
-      <div class="my-issues">
-        <div class="section-title">
-          我的事项
-        </div>
-        <el-table :data="tableData" class="table" align="center">
-          <el-table-column prop="date" label="事项id" width="400" />
-          <el-table-column label="事项内容" width="400">
-            <template slot-scope="scope">
-              <span style="cursor: pointer; color: #1890ff;" @click="handleItemClick(scope.row)">{{ scope.row.name
-                }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="address" label="事项状态" width="400">
-            <template slot-scope="scope">
-              <span
-                :style="{ color: scope.row.address === '已处理' ? 'green' : 'red', margin: '5px', border: '1px solid ' + (scope.row.address === '已处理' ? 'green' : 'red'), padding: '3px 8px', borderRadius: '4px' }">{{
-                  scope.row.address }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="time" label="创建时间" width="400" />
-        </el-table>
-      </div>
+    <div class="totalamount">总金额：&yen;{{ totalAmount }}</div>
+    <div class="title2">
+      <h2>选择支付方式</h2>
     </div>
+
+    <div class="button-custom">
+      <el-button type="primary" icon="icon-yuezhifu" @click="showBalanceDialog">
+        <svg-icon icon-class="icon-yuezhifu" />余额支付</el-button>
+      <el-button type="primary" icon="icon-weixinzhifu" @click="showQRCode('wechat')">
+        <svg-icon icon-class="icon-weixinzhifu" />微信支付</el-button>
+      <el-button type="primary" icon="icon-zhifubaozhifu" @click="showQRCode('alipay')">
+        <svg-icon icon-class="icon-zhifubaozhifu" />支付宝</el-button>
+    </div>
+
+    <!------余额支付弹窗-->
+    <el-dialog title="余额支付" :visible.sync="balanceDialogVisible">
+      <p>您的余额为：&yen;{{ balance }}</p>
+      <el-form>
+        <el-form-item label="支付密码">
+          <el-input v-model="paymentPassword" show-password placeholder="请输入支付密码" />
+        </el-form-item>
+
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="balanceDialogVisible = false">取消支付</el-button>
+        <el-button type="primary" @click="handleBalancePayment">确认支付</el-button>
+      </span>
+    </el-dialog>
+
+    <!---微信支付支付宝弹窗-->
+    <el-dialog :title="qrDialogTitle" :visible.sync="qrCodeDialogVisible">
+      <img v-if="qrCodeType === 'wechat'" src="" alt="微信支付二维码" style="width: 200px; height: 200px;">
+      <img v-else-if="qrCodeType === 'alipay'" src="" alt="支付宝支付二维码" style="width: 200px; height: 200px;">
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import Tinymce from '@/components/Tinymce'
+import { getAll } from '@/api/orders'
 
 export default {
-  name: 'TinymceDemo',
-  components: { Tinymce },
   data () {
     return {
-      content: '', // 确认这里的命名是否正确
+      active: 1,
       tableData: [
-        { date: '1', name: '事项内容1', address: '已处理', time: '2023-05-10 10:30:28' },
-        { date: '2', name: '事项内容2', address: '待处理', time: '2023-05-10 10:27:47' },
-        { date: '3', name: '事项内容3', address: '已处理', time: '2023-05-10 10:24:11' }
-        // 更多事项...
-      ]
+        { productInformation: '商品A', monovalent: 100, quantity: 2, subtotal: 200 },
+        { productInformation: '商品B', monovalent: 150, quantity: 3, subtotal: 450 },
+        { productInformation: '商品C', monovalent: 80, quantity: 5, subtotal: 400 }
+      ],
+      initialTotalAmount: 1050, // 示例总金额
+      balanceDialogVisible: false,
+      balance: 500, // 示例余额
+      paymentPassword: '',
+      qrCodeDialogVisible: false,
+      qrCodeType: '', // 微信或支付宝
+      qrDialogTitle: ''
     }
   },
-
+  computed: {
+    totalAmount () {
+      let total = 0
+      this.tableData.forEach(item => {
+        total += item.subtotal
+      })
+      return total
+    }
+  },
+  created () {
+    this.getAll() // 调用获取数据的方法
+  },
   methods: {
-    changeWang (html) {
-      this.WangValue = html
-      console.log(this.WangValue)
+    async getAll () {
+      try {
+        const response = await getAll()
+        this.class01 = response.data
+        this.filteredClass01 = JSON.parse(JSON.stringify(this.class01))
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      }
     },
-    sendData () {
-      // 处理发送逻辑
+    onSubmit () {
+      // 留空，或者添加实际的表单提交逻辑
     },
-    handleItemClick (row) {
-      // 处理点击事件，可以在这里添加具体的逻辑，比如打开详情页等操作
-      console.log('点击了事项内容：', row)
+    showBalanceDialog () {
+      this.balanceDialogVisible = true
+    },
+    handleBalancePayment () {
+      // ... 原有的支付逻辑 ...
+      // 更新步骤条状态
+      // 这里可以添加实际的支付逻辑，比如向后端发送请求
+      // 支付成功后显示成功信息和按钮
+      // 使用 $router.push 进行页面跳转
+      this.$router.push('/paysucceed') // 确保路由路径是正确的
+    },
+    showQRCode (type) {
+      if (type === 'wechat') {
+        this.qrCodeType = 'wechat'
+        this.qrDialogTitle = '微信支付'
+        this.qrCodeDialogVisible = true
+      } else if (type === 'alipay') {
+        this.qrCodeType = 'alipay'
+        this.qrDialogTitle = '支付宝支付'
+        this.qrCodeDialogVisible = true
+      }
     }
   }
 }
 </script>
 
 <style>
-.container1 {
+.container {
   margin: 30px;
   padding: 30px;
-  width: auto;
+  border-radius: 10px;
 }
 
-.breadcrumb-bold {
-  font-weight: bold;
+.custom-steps {
+  width: 1200px;
+  margin: 0 auto;
+  margin-top: 50px;
 }
 
-.custom-tinymce-container {
-  width: auto;
-  height: auto;
-  margin-top: 20px;
-}
-
-.button {
-  width: 250px;
-  margin-top: 20px;
-}
-
-.my-issues {
-  margin: 20px;
-  padding: 20px;
-  border: none;
-  border-radius: 4px;
-}
-
-.table {
-  width: 100%;
+.title1 {
   margin-top: 30px;
-  max-height: 400px;
-  /* 设置最大高度 */
-  overflow-y: auto;
-  /* 垂直滚动条 */
+}
+
+.totalamount {
+  text-align: right;
+  font-weight: bold;
+  margin-top: 30px;
+}
+
+.title2 {
+  margin-top: 30px;
+}
+
+.button-custom img {
+  width: 20px;
+  /* 调整图片的宽度 */
+  margin-right: 8px;
+  /* 可选：调整图片和文本之间的间距 */
+}
+
+.button-custom .el-button {
+  margin: 5px 10px;
+  padding: 15px 30px;
+  width: 200px;
+  height: 100px;
+  border-radius: 4px;
+  font-size: 25px;
+  background-color: #FFFFFF;
+  color: #000000;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-color: rgba(0, 0, 0, 0);
+  /* 设置边框颜色为透明 */
+}
+
+.button-custom .el-button .el-icon-svg {
+  width: 30px;
+  /* 调整图标的宽度 */
+  height: 30px;
+  /* 调整图标的高度 */
 }
 </style>
