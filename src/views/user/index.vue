@@ -93,6 +93,11 @@ export default {
     }
   },
   async mounted() {
+    const show = this.$route.query.show
+    console.log(show)
+    if (show === 'orders') {
+      this.activeMenu = '2-1'
+    }
     await this.getUser()
   },
   methods: {

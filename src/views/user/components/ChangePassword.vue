@@ -17,6 +17,7 @@
 </template>
 
 <script>
+import CryptoJS from 'crypto-js'
 import { updatePassword } from '@/api/user'
 
 export default {
@@ -32,6 +33,8 @@ export default {
     async changePassword() {
       // 修改密码逻辑
       if (this.form.newPassword === this.form.confirmPassword) {
+        const encryptedPassword = CryptoJS.MD5(this.form.confirmPassword).toString()
+        this.form.confirmPassword = encryptedPassword
         const response = await updatePassword(this.form.confirmPassword)
         this.$message.success('密码修改成功')
       } else {

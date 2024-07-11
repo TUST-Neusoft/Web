@@ -16,6 +16,7 @@ export const constantRoutes = [
     }],
     hidden: true
   },
+
   {
     path: '/404',
     component: () => import('@/views/404'),
@@ -30,30 +31,10 @@ export const constantRoutes = [
       path: 'dashboard',
       name: 'Dashboard',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: 'Dashboard', icon: 'dashboard' }
+      meta: { title: '首页', icon: 'dashboard' }
     }]
   },
-  {
-    path: '/example',
-    component: Layout,
-    redirect: '/example/table',
-    name: 'Example',
-    meta: { title: 'Example', icon: 'el-icon-s-help' },
-    children: [
-      {
-        path: 'table',
-        name: 'Table',
-        component: () => import('@/views/table/index'),
-        meta: { title: 'Table', icon: 'table' }
-      },
-      {
-        path: 'tree',
-        name: 'Tree',
-        component: () => import('@/views/tree/index'),
-        meta: { title: 'Tree', icon: 'tree' }
-      }
-    ]
-  },
+
   {
     path: '/goods',
     component: Layout,
@@ -62,19 +43,24 @@ export const constantRoutes = [
         path: 'index',
         name: 'Goods',
         component: () => import('@/views/goods/index'),
-        meta: { title: '全部商品', icon: 'form' }
+        meta: { title: '全部商品', icon: 'el-icon-s-shop' }
+      },
+      {
+        path: '/detail',
+        name: 'Detail',
+        component: () => import('@/views/goods/detail'),
+        meta: { title: '商品详情', icon: 'el-icon-s-shop' },
+        hidden: true
       }
     ]
   },
   {
-    path: '/goods/detail',
+    path: 'external-link',
     component: Layout,
     children: [
       {
-        path: '',
-        name: 'Detail',
-        component: () => import('@/views/goods/detail'),
-        meta: { title: '商品详情', icon: 'form' }
+        path: '/user?show=orders',
+        meta: { title: '我的订单', icon: 'el-icon-s-finance' }
       }
     ]
   },
@@ -86,10 +72,11 @@ export const constantRoutes = [
         path: '',
         name: 'Cart',
         component: () => import('@/views/cart/index'),
-        meta: { title: '购物车', icon: 'form' }
+        meta: { title: '购物车', icon: 'el-icon-s-goods' }
       }
     ]
   },
+
   {
     path: '/user',
     component: Layout,
@@ -98,56 +85,56 @@ export const constantRoutes = [
         path: '',
         name: 'User',
         component: () => import('@/views/user/index'),
-        meta: { title: '用户', icon: 'form' }
+        meta: { title: '个人中心', icon: 'el-icon-user-solid' }
       }
     ]
   },
-  {
-    path: '/duanjunxing',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        name: 'Form',
-        component: () => import('@/views/DuanJunXing/index'),
-        meta: { title: '段', icon: 'form' }
-      }
-    ]
-  },
-  {
-    path: '/maozijun',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        name: 'Form',
-        component: () => import('@/views/MaoZiJun/index'),
-        meta: { title: '毛', icon: 'form' }
-      }
-    ]
-  },
-  {
-    path: '/zhaoyulong',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        name: 'Form',
-        component: () => import('@/views/ZhaoYuLong/index'),
-        meta: { title: '龙', icon: 'form' }
-      }
-    ]
-  },
-  {
-    path: 'external-link',
-    component: Layout,
-    children: [
-      {
-        path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
-        meta: { title: 'External Link', icon: 'link' }
-      }
-    ]
-  },
+  // {
+  //   path: '/duanjunxing',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       name: 'Form',
+  //       component: () => import('@/views/DuanJunXing/index'),
+  //       meta: { title: '段', icon: 'form' }
+  //     }
+  //   ]
+  // },
+  // {
+  //   path: '/maozijun',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       name: 'Form',
+  //       component: () => import('@/views/MaoZiJun/index'),
+  //       meta: { title: '毛', icon: 'form' }
+  //     }
+  //   ]
+  // },
+  // {
+  //   path: '/zhaoyulong',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       name: 'Form',
+  //       component: () => import('@/views/ZhaoYuLong/index'),
+  //       meta: { title: '龙', icon: 'form' }
+  //     }
+  //   ]
+  // },
+  // {
+  //   path: 'external-link',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
+  //       meta: { title: 'External Link', icon: 'link' }
+  //     }
+  //   ]
+  // },
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }

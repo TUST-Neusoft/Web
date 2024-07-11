@@ -47,7 +47,7 @@ export default {
     return {
       form: {
         avatar: '',
-        username: '奥里给',
+        userName: '奥里给',
         gender: '男',
         email: 'mazhihao@neuedu.com',
         phone: '18611111111'

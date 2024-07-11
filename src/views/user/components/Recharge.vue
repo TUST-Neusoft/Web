@@ -6,7 +6,7 @@
         <span>{{ balance }}</span>
       </el-form-item>
       <el-form-item label="充值金额" required>
-        <el-input v-model="form.amount" placeholder="请输入充值金额"></el-input>
+        <el-input v-model="form.amount" placeholder="请输入充值金额" />
       </el-form-item>
       <el-form-item label="支付方式" required>
         <el-radio-group v-model="form.paymentMethod" size="medium">
@@ -26,17 +26,18 @@
       <p>充值后余额：{{ (parseFloat(balance) + parseFloat(form.amount)).toFixed(2) }}</p>
       <p>请扫码支付：</p>
       <div class="qr-code">
-        <img src="https://via.placeholder.com/150" alt="QR Code" />
+        <img src="https://via.placeholder.com/150" alt="QR Code">
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取消支付</el-button>
-        <el-button type="primary" @click="completePayment">支付完成</el-button>
+        <el-button type="primary" @click="chargeMoney">支付完成</el-button>
       </span>
     </el-dialog>
   </div>
 </template>
 
 <script>
+import { getMyWallet, chargeMoney } from '@/api/wallet'
 export default {
   data() {
     return {
@@ -46,35 +47,44 @@ export default {
         paymentMethod: 'wechat'
       },
       dialogVisible: false
-    };
+    }
+  },
+  mounted() {
+    this.getMyWallet()
   },
   methods: {
     confirmRecharge() {
       if (this.form.amount && this.form.paymentMethod) {
-        this.dialogVisible = true;
+        this.dialogVisible = true
       } else {
-        this.$message.error('请填写完整的充值信息');
+        this.$message.error('请填写完整的充值信息')
       }
     },
     resetForm() {
-      this.form.amount = '';
-      this.form.paymentMethod = 'wechat';
+      this.form.amount = ''
+      this.form.paymentMethod = 'wechat'
     },
     getPaymentMethodLabel(value) {
       const options = {
         wechat: '微信支付',
         alipay: '支付宝'
-      };
-      return options[value] || '';
+      }
+      return options[value] || ''
     },
-    completePayment() {
-      this.$message.success('支付成功');
-      this.dialogVisible = false;
-      this.balance = (parseFloat(this.balance.replace(/,/g, '')) + parseFloat(this.form.amount)).toFixed(2);
-      this.resetForm();
-    }
+    async getMyWallet() {
+      const response = await getMyWallet()
+      this.balance = response.data
+    },
+    async chargeMoney() {
+      const response = await chargeMoney(this.form.amount)
+      if (response.code === 0) {
+        this.$message.success('支付成功')
+        this.getMyWallet()
+        this.dialogVisible = false
+      }
+    },
   }
-};
+}
 </script>
 
 <style scoped>
