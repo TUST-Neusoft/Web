@@ -1,13 +1,13 @@
 <template>
   <div class="container">
     <div class="title">
-      <span><svg-icon icon-class="Order-Information" /></span>&nbsp;&nbsp;&nbsp;
+      <span><svg-icon icon-class="Order-Information" /> </span>&nbsp;&nbsp;&nbsp;
       订单信息
     </div>
     <div class="component">
       <div>
         <span>
-          <svg-icon icon-class="success" style="width: 80px; height: 80px;" />
+          <svg-icon icon-class="success" style="width: 80px;height: 80px;" />
         </span>
       </div>
       <div class="success-dingdan">
@@ -18,7 +18,8 @@
       <h4>订单号：{{ orderNumber }}</h4>
       <h4>订单总金额：{{ totalAmount }}</h4>
       <h4>订单状态：{{ orderStatus }}</h4>
-      <h4>订单创建时间：{{ orderCreatedAt }}</h4>
+      <h4>订单创建时间：{{ createTime }}</h4>
+
     </div>
     <div class="button1">
       <el-button @click="goHome">返回首页</el-button>
@@ -28,45 +29,23 @@
 </template>
 
 <script>
-import { getAllOrders } from '@/api/orders'; // 确保导入正确的方法
-
 export default {
-  data () {
-    return {
-      orderNumber: '', // 订单号
-      totalAmount: '', // 订单总金额
-      orderStatus: '', // 订单状态
-      orderCreatedAt: '' // 订单创建时间
-    };
-  },
-  created () {
-    this.fetchOrderDetails(); // 改为调用正确的方法
-  },
   methods: {
-    async fetchOrderDetails () {
-      try {
-        const response = await getAllOrders(); // 调用正确的 API 方法
-        const orderDetails = response.data; // 假设 API 返回的数据结构包含订单详情
-        this.orderNumber = orderDetails.orderNumber; // 更新订单号
-        this.totalAmount = orderDetails.totalAmount; // 更新订单总金额
-        this.orderStatus = orderDetails.orderStatus; // 更新订单状态
-        this.orderCreatedAt = orderDetails.createdAt; // 更新订单创建时间
-      } catch (error) {
-        console.error('Error fetching order details:', error);
-      }
-    },
     goHome () {
-      this.$router.push('/home'); // 示例：使用 Vue Router 跳转到首页路由
+      // 返回首页的逻辑
+      // 可以使用路由导航或者直接跳转链接等方式
+      this.$router.push('/home') // 示例：使用 Vue Router 跳转到首页路由
     },
     goOrderManagement () {
-      console.log('开始支付流程');
-      // 示例：支付成功后跳转到订单管理页面
-      this.$router.push('/order-management');
+      // 立即支付的逻辑
+      // 可以执行支付流程、跳转支付页面等操作
+      console.log('开始支付流程')
+      // 示例：假设支付成功后跳转到订单管理页面
+      this.$router.push('/order-management')
     }
   }
-};
+}
 </script>
-
 <style>
 .container {
   margin: 30px;
@@ -76,6 +55,7 @@ export default {
 
 .title {
   margin: 20px auto;
+  /* 保留原有的左右自动边距，增加上下间距 */
   background-color: #f5f7fa;
   padding: 20px;
   border-radius: 10px;
@@ -83,11 +63,14 @@ export default {
   justify-content: center;
   align-items: center;
   margin-bottom: 20px;
+  /* 新增的下方间距 */
   font-weight: bold;
+
 }
 
 .title span {
   color: #000000;
+  /* 可选：将文本颜色设置为白色，以便在蓝色背景上更清晰显示 */
 }
 
 .component {
@@ -101,17 +84,18 @@ export default {
 
 .information {
   margin-left: 400px;
-  /* 根据实际需要调整 */
   margin-top: 50px;
-  /* 根据实际需要调整 */
 }
 
 .button1 {
   margin-top: 30px;
+  /* 增加顶部间距 */
   text-align: center;
+
 }
 
 .button1>.el-button:first-child {
   margin-right: 20px;
+  /* 通过调整第一个按钮的右边距来增加按钮之间的间距 */
 }
 </style>

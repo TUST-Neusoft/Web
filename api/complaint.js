@@ -7,9 +7,10 @@ export function getMyComplaint() {
   })
 }
 
-export function addComplaint() {
+export function addComplaint(data) {
   return request({
     url: '/complaint/addComplaint',
     method: 'post',
+    data
   })
 }

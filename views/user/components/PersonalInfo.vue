@@ -3,8 +3,13 @@
     <h2 class="title">个人资料</h2>
     <el-form :model="userData" label-width="80px" class="form">
       <el-form-item label="用户头像" class="avatar-item">
-        <el-upload class="avatar-uploader" action="https://jsonplaceholder.typicode.com/posts/" :show-file-list="false"
-          :on-success="handleAvatarSuccess" :before-upload="beforeAvatarUpload">
+        <el-upload
+          class="avatar-uploader"
+          action="https://jsonplaceholder.typicode.com/posts/"
+          :show-file-list="false"
+          :on-success="handleAvatarSuccess"
+          :before-upload="beforeAvatarUpload"
+        >
           <img v-if="userData.avatar" :src="userData.avatar" class="avatar">
           <i v-else class="el-icon-plus avatar-uploader-icon" />
         </el-upload>
@@ -38,11 +43,11 @@ import { updateUser } from '@/api/user'
 
 export default {
   props: ['userData'],
-  data () {
+  data() {
     return {
       form: {
         avatar: '',
-        username: '奥里给',
+        userName: '奥里给',
         gender: '男',
         email: 'mazhihao@neuedu.com',
         phone: '18611111111'
@@ -50,10 +55,10 @@ export default {
     }
   },
   methods: {
-    handleAvatarSuccess (res, file) {
+    handleAvatarSuccess(res, file) {
       this.form.avatar = URL.createObjectURL(file.raw)
     },
-    beforeAvatarUpload (file) {
+    beforeAvatarUpload(file) {
       const isJPG = file.type === 'image/jpeg'
       const isPNG = file.type === 'image/png'
       const isLt3M = file.size / 1024 / 1024 < 3
@@ -66,7 +71,7 @@ export default {
       }
       return (isJPG || isPNG) && isLt3M
     },
-    resetForm () {
+    resetForm() {
       this.userData = {
         avatar: null,
         createTime: null,
@@ -82,7 +87,7 @@ export default {
       }
       this.$message.success('已重置')
     },
-    async updateUser () {
+    async updateUser() {
       const response = await updateUser(this.userData)
       if (response.code === 0) {
         this.$message.success('个人资料已更新')
@@ -94,10 +99,8 @@ export default {
 
 <style scoped>
 .personal-info-container {
-  margin-top: -30px;
-  /* 调整这个值来向上或向下移动表单 */
-  margin-left: 20px;
-  /* 调整这个值来改变整个表单的位置 */
+  margin-top: -30px; /* 调整这个值来向上或向下移动表单 */
+  margin-left: 20px; /* 调整这个值来改变整个表单的位置 */
 }
 
 .title {
@@ -115,8 +118,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  margin-bottom: 10px;
-  /* 调整这个值来增加/减少头像部分和其他内容之间的间距 */
+  margin-bottom: 10px; /* 调整这个值来增加/减少头像部分和其他内容之间的间距 */
 }
 
 .avatar-uploader {
@@ -128,8 +130,7 @@ export default {
   cursor: pointer;
   position: relative;
   overflow: hidden;
-  margin-bottom: 5px;
-  /* 调整这个值来增加/减少头像框和提示文本之间的间距 */
+  margin-bottom: 5px; /* 调整这个值来增加/减少头像框和提示文本之间的间距 */
 }
 
 .avatar-uploader-icon {
@@ -152,8 +153,7 @@ export default {
 .tip {
   display: block;
   color: #909399;
-  margin-top: 5px;
-  /* 调整这个值来增加/减少提示文本和头像框之间的间距 */
+  margin-top: 5px; /* 调整这个值来增加/减少提示文本和头像框之间的间距 */
 }
 
 .form-buttons {

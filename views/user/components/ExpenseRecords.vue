@@ -41,15 +41,21 @@
       <el-table-column prop="timestamp" label="操作时间" align="center" />
     </el-table>
     <div class="pagination-container">
-      <el-pagination background layout="prev, pager, next" :total="totalLogs" :page-size="pageSize"
-        @current-change="handlePageChange" />
+      <el-pagination
+        background
+        layout="prev, pager, next"
+        :total="totalLogs"
+        :page-size="pageSize"
+        @current-change="handlePageChange"
+      />
     </div>
   </div>
 </template>
 
 <script>
+import { getWalletLogs } from '@/api/logs'
 export default {
-  data () {
+  data() {
     return {
       filters: {
         status: '0',
@@ -62,11 +68,11 @@ export default {
       currentPage: 1
     }
   },
-  mounted () {
-    this.fetchLogs()
+  mounted() {
+    this.getWalletLogs()
   },
   methods: {
-    fetchLogs () {
+    fetchLogs() {
       this.loading = true
       setTimeout(() => {
         const filteredLogs = this.mockLogs().filter(log => {
@@ -81,16 +87,16 @@ export default {
         this.loading = false
       }, 500)
     },
-    resetFilters () {
+    resetFilters() {
       this.filters.status = '0'
       this.filters.type = '0'
       this.fetchLogs()
     },
-    handlePageChange (page) {
+    handlePageChange(page) {
       this.currentPage = page
       this.fetchLogs()
     },
-    getOperationTypeLabel (type) {
+    getOperationTypeLabel(type) {
       const types = {
         1: '商品支付',
         2: '充值',
@@ -101,7 +107,7 @@ export default {
       }
       return types[type] || '未知类型'
     },
-    mockLogs () {
+    mockLogs() {
       const logs = []
       for (let i = 0; i < 100; i++) {
         logs.push({
@@ -113,6 +119,11 @@ export default {
         })
       }
       return logs
+    },
+    async getWalletLogs() {
+      const response = await getWalletLogs()
+      this.logs = response.data
+      this.fetchLogs()
     }
   }
 }
@@ -141,8 +152,7 @@ export default {
   height: 100%;
 }
 
-.el-table th,
-.el-table td {
+.el-table th, .el-table td {
   padding: 10px;
   text-align: center;
 }

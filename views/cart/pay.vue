@@ -7,7 +7,7 @@
 
     <div class="title1">
       <h2>订单商品信息</h2>
-      <h4>订单号：{{ totalAmount }}</h4>
+      <h4>订单号：{{ orderNumber }}</h4>
     </div>
 
     <el-table :data="tableData" style="width: 100%">
@@ -55,13 +55,14 @@
 </template>
 
 <script>
-import { getMyWallet } from '@/api/wallet'
+import { getMyWallet } from '@/api/wallet';
+import { getOrders } from '@/api/orders';
 
 export default {
   data () {
     return {
       active: 1,
-      balance: 0,
+      balance: '80,064.42', // 示例余额
       tableData: [
         { productInformation: '商品A', monovalent: 100, quantity: 2, subtotal: 200 },
         { productInformation: '商品B', monovalent: 150, quantity: 3, subtotal: 450 },
@@ -75,6 +76,10 @@ export default {
       qrDialogTitle: ''
     }
   },
+  mounted () {
+    this.getMyWallet();
+    this.getOrders();
+  },
   computed: {
     totalAmount () {
       let total = 0
@@ -84,21 +89,26 @@ export default {
       return total
     }
   },
-  created () {
-    this.getMyWallet() // 调用获取数据的方法
-  },
   methods: {
     async getMyWallet () {
       try {
-        const response = await getMyWallet()
-        this.balance = response.data.balance
+        const response = await getMyWallet();
+        this.balance = response.data;
       } catch (error) {
-        console.error('Error fetching data:', error)
+        console.error('Failed to fetch wallet data:', error);
+        // Handle error as per your application's requirements
       }
     },
-    onSubmit () {
-      // 留空，或者添加实际的表单提交逻辑
+    async getOrders () {
+      try {
+        const response = await getOrders(); // 假设这个函数是正确实现的用来获取订单数据的 API 请求
+        this.tableData = response.data; // 将订单数据赋值给 tableData，这里的 response.data 应该是一个包含订单信息的数组
+      } catch (error) {
+        console.error('Failed to fetch orders:', error);
+        // 根据你的应用逻辑处理错误，比如显示错误信息或者采取其他适当的措施
+      }
     },
+
     showBalanceDialog () {
       this.balanceDialogVisible = true
     },
@@ -108,7 +118,7 @@ export default {
       // 这里可以添加实际的支付逻辑，比如向后端发送请求
       // 支付成功后显示成功信息和按钮
       // 使用 $router.push 进行页面跳转
-      this.$router.push('/paysucceed') // 确保路由路径是正确的
+      this.$router.push('paysucceed')
     },
     showQRCode (type) {
       if (type === 'wechat') {
@@ -124,6 +134,7 @@ export default {
   }
 }
 </script>
+
 
 <style>
 .container {

@@ -6,22 +6,22 @@
 
 <script>
 export default {
-  data () {
+  data() {
     return {
       collections: []
     }
   },
-  created () {
+  created() {
     this.fetchCollections()
   },
   methods: {
-    fetchCollections () {
+    fetchCollections() {
       // 获取收藏数据逻辑
     }
   }
 }
 </script>
 
-<style scoped>
-/* 样式 */
-</style>
+  <style scoped>
+  /* 样式 */
+  </style>

@@ -17,10 +17,11 @@
 </template>
 
 <script>
+import CryptoJS from 'crypto-js'
 import { updatePassword } from '@/api/user'
 
 export default {
-  data () {
+  data() {
     return {
       form: {
         newPassword: '',
@@ -29,16 +30,18 @@ export default {
     }
   },
   methods: {
-    async changePassword () {
+    async changePassword() {
       // 修改密码逻辑
       if (this.form.newPassword === this.form.confirmPassword) {
+        const encryptedPassword = CryptoJS.MD5(this.form.confirmPassword).toString()
+        this.form.confirmPassword = encryptedPassword
         const response = await updatePassword(this.form.confirmPassword)
         this.$message.success('密码修改成功')
       } else {
         this.$message.error('两次输入的密码不一致')
       }
     },
-    resetForm () {
+    resetForm() {
       this.form.newPassword = ''
       this.form.confirmPassword = ''
     }
@@ -48,10 +51,8 @@ export default {
 
 <style scoped>
 .change-password-container {
-  margin-top: -30px;
-  /* 调整这个值来向上或向下移动表单 */
-  margin-left: 20px;
-  /* 调整这个值来改变整个表单的位置 */
+  margin-top: -30px; /* 调整这个值来向上或向下移动表单 */
+  margin-left: 20px; /* 调整这个值来改变整个表单的位置 */
 }
 
 .title {

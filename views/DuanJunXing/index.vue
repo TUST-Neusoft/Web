@@ -55,8 +55,6 @@
 </template>
 
 <script>
-import { getAll } from '@/api/orders'
-
 export default {
   data () {
     return {
@@ -84,22 +82,8 @@ export default {
       return total
     }
   },
-  created () {
-    this.getAll() // 调用获取数据的方法
-  },
+
   methods: {
-    async getAll () {
-      try {
-        const response = await getAll()
-        this.class01 = response.data
-        this.filteredClass01 = JSON.parse(JSON.stringify(this.class01))
-      } catch (error) {
-        console.error('Error fetching data:', error)
-      }
-    },
-    onSubmit () {
-      // 留空，或者添加实际的表单提交逻辑
-    },
     showBalanceDialog () {
       this.balanceDialogVisible = true
     },
@@ -109,7 +93,7 @@ export default {
       // 这里可以添加实际的支付逻辑，比如向后端发送请求
       // 支付成功后显示成功信息和按钮
       // 使用 $router.push 进行页面跳转
-      this.$router.push('/paysucceed') // 确保路由路径是正确的
+      this.$router.push('paysucceed')
     },
     showQRCode (type) {
       if (type === 'wechat') {
@@ -124,6 +108,7 @@ export default {
     }
   }
 }
+
 </script>
 
 <style>

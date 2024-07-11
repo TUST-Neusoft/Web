@@ -48,8 +48,13 @@
       </div>
     </div>
     <div class="pagination-container">
-      <el-pagination background layout="prev, pager, next" :total="totalOrders" :page-size="pageSize"
-        @current-change="handlePageChange" />
+      <el-pagination
+        background
+        layout="prev, pager, next"
+        :total="totalOrders"
+        :page-size="pageSize"
+        @current-change="handlePageChange"
+      />
     </div>
   </div>
 </template>
@@ -57,7 +62,7 @@
 <script>
 import { getMyOrders } from '@/api/orders'
 export default {
-  data () {
+  data() {
     return {
       filters: {
         status: '0',
@@ -72,12 +77,12 @@ export default {
       currentPage: 1
     }
   },
-  mounted () {
+  mounted() {
     this.fetchOrders()
     this.getMyOrders()
   },
   methods: {
-    fetchOrders () {
+    fetchOrders() {
       this.loading = true
       setTimeout(() => {
         const filteredOrders = this.orders.filter(order => {
@@ -94,18 +99,18 @@ export default {
         this.loading = false
       }, 500)
     },
-    resetFilters () {
+    resetFilters() {
       this.filters.status = '0'
       this.filters.orderNo = ''
       this.filters.startTime = ''
       this.filters.endTime = ''
       this.fetchOrders()
     },
-    handlePageChange (page) {
+    handlePageChange(page) {
       this.currentPage = page
       this.fetchOrders()
     },
-    getStatusLabel (status) {
+    getStatusLabel(status) {
       const statusLabels = {
         '-1': '未支付',
         '2': '待发货',
@@ -115,7 +120,7 @@ export default {
       }
       return statusLabels[status] || '未知状态'
     },
-    getStatusType (status) {
+    getStatusType(status) {
       const statusTypes = {
         '-1': 'info',
         '2': 'warning',
@@ -125,7 +130,7 @@ export default {
       }
       return statusTypes[status] || 'info'
     },
-    async getMyOrders () {
+    async getMyOrders() {
       const response = await getMyOrders()
       this.orders = response.data
     }
@@ -136,10 +141,8 @@ export default {
 <style scoped>
 .order-container {
   padding: 20px;
-  margin-top: -30px;
-  /* 调整这个值来向上或向下移动表单 */
-  margin-left: 20px;
-  /* 调整这个值来改变整个表单的位置 */
+  margin-top: -30px; /* 调整这个值来向上或向下移动表单 */
+  margin-left: 20px; /* 调整这个值来改变整个表单的位置 */
 }
 
 .title {
@@ -159,8 +162,7 @@ export default {
   padding: 20px;
 }
 
-.order-header,
-.order-footer {
+.order-header, .order-footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -201,9 +203,7 @@ export default {
   flex: 2;
 }
 
-.item-price,
-.item-quantity,
-.total-price {
+.item-price, .item-quantity, .total-price {
   margin-left: 10px;
   flex: 1;
 }
@@ -214,18 +214,12 @@ export default {
 
 .total-price-container {
   display: flex;
-  justify-content: flex-end;
-  /* 调整左右位置 */
-  align-items: center;
-  /* 调整上下位置 */
-  margin-left: 710px;
-  /* 向右移动 */
-  margin-right: 0px;
-  /* 向左移动 */
-  margin-top: 20px;
-  /* 向下移动 */
-  margin-bottom: 0px;
-  /* 向上移动 */
+  justify-content: flex-end; /* 调整左右位置 */
+  align-items: center; /* 调整上下位置 */
+  margin-left: 710px; /* 向右移动 */
+  margin-right: 0px; /* 向左移动 */
+  margin-top: 20px; /* 向下移动 */
+  margin-bottom: 0px; /* 向上移动 */
 }
 
 .total-price {

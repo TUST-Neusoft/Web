@@ -14,16 +14,3 @@ export function getOrders() {
   })
 }
 
-export function addOrders() {
-  return request({
-    url: '/orders/addOrders',
-    method: 'post',
-  })
-}
-
-export function payOrders() {
-  return request({
-    url: '/orders/payOrders',
-    method: 'post',
-  })
-}
