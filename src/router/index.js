@@ -7,6 +7,13 @@ import Index from '@/views/goods/index.vue'
 import Detail from '@/views/goods/detail.vue'
 import Layout from '@/layout'
 
+
+import Notification from '@/views/ZhaoYuLong/components/Notification.vue'
+import ParkingManagement from '@/views/ZhaoYuLong/components/ParkingManagement.vue'
+import VisitorRegistration from '@/views/ZhaoYuLong/components/VisitorRegistration.vue'
+import RepairReport from '@/views/ZhaoYuLong/components/RepairReport.vue'
+import PropertyFeePayment from '@/views/ZhaoYuLong/components/PropertyFeePayment.vue'
+
 export const constantRoutes = [
   {
     path: '/login',
@@ -199,6 +206,51 @@ export const constantRoutes = [
       {
         path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
         meta: { title: 'External Link', icon: 'link' }
+      }
+    ]
+  },
+  {
+    path: '/',
+    component: Layout,
+    redirect: '/dashboard',
+    children: [
+      {
+        path: 'dashboard',
+        name: 'Dashboard',
+        component: () => import('@/views/dashboard/index'),
+        meta: { title: 'Dashboard', icon: 'dashboard' }
+      }
+    ]
+  },
+  {
+    path: '/',
+    component: Layout,
+    redirect: '/notification',
+    children: [
+      {
+        path: 'notification',
+        name: 'Notification',
+        component: Notification
+      },
+      {
+        path: 'parking-management',
+        name: 'ParkingManagement',
+        component: ParkingManagement
+      },
+      {
+        path: 'visitor-registration',
+        name: 'VisitorRegistration',
+        component: VisitorRegistration
+      },
+      {
+        path: 'repair-report',
+        name: 'RepairReport',
+        component: RepairReport
+      },
+      {
+        path: 'property-fee-payment',
+        name: 'PropertyFeePayment',
+        component: PropertyFeePayment
       }
     ]
   },
