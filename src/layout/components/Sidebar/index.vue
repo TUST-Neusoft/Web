@@ -1,16 +1,16 @@
 <template>
-  <div :class="{'has-logo':showLogo}">
+  <div :class="['side',{'has-logo':showLogo}]">
     <logo v-if="showLogo" :collapse="isCollapse" />
     <el-scrollbar wrap-class="scrollbar-wrapper">
       <el-menu
         :default-active="activeMenu"
         :collapse="isCollapse"
-        :background-color="variables.menuBg"
-        :text-color="variables.menuText"
+        background-color="#409EFF"
+        text-color="#fff"
         :unique-opened="false"
-        :active-text-color="variables.menuActiveText"
+        active-text-color="#fff"
         :collapse-transition="false"
-        mode="vertical"
+        mode="horizontal"
       >
         <sidebar-item v-for="route in routes" :key="route.path" :item="route" :base-path="route.path" />
       </el-menu>
@@ -54,3 +54,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.side{
+  padding: 0 15vw;
+}
+</style>
