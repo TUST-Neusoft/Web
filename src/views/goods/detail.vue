@@ -89,27 +89,27 @@ export default {
       options: [
         {
           value: '选项1',
-          label: '天津科技大学13公寓',
-          secLabel: [401, 402, 403, 404, 405, 406]
+          label: '自提点1',
+          secLabel: [1, 2, 3, 4, 5, 6]
         },
         {
           value: '选项2',
-          label: '天津科技大学14公寓',
-          secLabel: [501, 502, 503, 504, 505, 506]
+          label: '自提点2',
+          secLabel: [1, 2, 3, 4, 5, 6]
         },
         {
           value: '选项3',
-          label: '天津科技大学15公寓',
+          label: '自提点3',
           secLabel: [601, 602, 603, 604, 605, 606]
         },
         {
           value: '选项4',
-          label: '天津科技大学16公寓',
+          label: '自提点4',
           secLabel: [701, 702, 703, 704, 705, 706]
         },
         {
           value: '选项5',
-          label: '天津科技大学17公寓',
+          label: '自提点5',
           secLabel: [801, 802, 803, 804, 805, 806]
         }
       ],
@@ -128,6 +128,7 @@ export default {
       price: 100,
       num: 1,
       goodsNo: '',
+      //storeNo: '',
       goods: {
 
       }
@@ -207,10 +208,12 @@ export default {
       this.isFavorited = !this.isFavorited
     },
     async Cartsadd() {
-      const response = await addCarts(this.goodsNo, this.storeNo, this.num);
+      // 将自提点信息加入到storeNo中
+      //this.storeNo = this.selectedOption + this.selectedSubOption;
+      const response = await addCarts(this.goodsNo, null, this.num);
       if (response.code === 0) {
         this.$message.success('成功添加购物车'),
-        this.num=1;
+          this.num = 1;
       }
     },
     async getDetail() {

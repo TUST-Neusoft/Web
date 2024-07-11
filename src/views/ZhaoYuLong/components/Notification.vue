@@ -6,9 +6,9 @@
         </div>
         <div class="table-container">
             <el-table :data="paginatedData" style="width: 100%" @row-click="open">
-                <el-table-column prop="name" label="公告标题" width="600">
+                <el-table-column prop="noticeTitle" label="公告标题" width="600">
                 </el-table-column>
-                <el-table-column prop="date" label="日期">
+                <el-table-column prop="createTime" label="日期">
                 </el-table-column>
             </el-table>
         </div>
@@ -45,13 +45,16 @@
 }
 
 .custom-message-box .el-message-box {
-    width: 600px !important; /* 设置弹出框宽度 */
+    width: 600px !important;
+    /* 设置弹出框宽度 */
     height: 1000px !important;
-    padding: 20px !important; /* 设置弹出框内边距 */
+    padding: 20px !important;
+    /* 设置弹出框内边距 */
 }
 
 .custom-message-box .el-message-box__content {
-    height: 500px !important; /* 设置内容区域高度 */
+    height: 500px !important;
+    /* 设置内容区域高度 */
     overflow: auto;
 }
 
@@ -72,27 +75,13 @@
 
 <script>
 import { MessageBox } from 'element-ui';
+import { getAllnotice } from '@/api/notice';
 
 export default {
     name: 'Notification',
     data() {
         return {
-            tableData: [
-                { name: '公告1', date: '2024-07-01' },
-                { name: '公告2', date: '2024-07-02' },
-                { name: '公告3', date: '2024-07-03' },
-                { name: '公告4', date: '2024-07-04' },
-                { name: '公告5', date: '2024-07-05' },
-                { name: '公告6', date: '2024-07-06' },
-                { name: '公告7', date: '2024-07-07' },
-                { name: '公告1', date: '2024-07-01' },
-                { name: '公告2', date: '2024-07-02' },
-                { name: '公告3', date: '2024-07-03' },
-                { name: '公告4', date: '2024-07-04' },
-                { name: '公告5', date: '2024-07-05' },
-                { name: '公告6', date: '2024-07-06' },
-                { name: '公告7', date: '2024-07-07' }
-            ],
+            tableData: [],
             currentPage: 1,
             pageSize: 10,
         }
@@ -104,6 +93,9 @@ export default {
             return this.tableData.slice(start, end);
         }
     },
+    created() {
+        this.getAllnotice();
+    },
     methods: {
         handleSizeChange(newSize) {
             this.pageSize = newSize;
@@ -114,8 +106,8 @@ export default {
         },
         open(row) {
             MessageBox({
-                title: '公告详情',
-                message: `标题: ${row.name}<br>日期: ${row.date}`,
+                title: row.noticeTitle,
+                message: row.noticeContent,
                 showCancelButton: false,
                 confirmButtonText: '确定',
                 dangerouslyUseHTMLString: true,
@@ -124,6 +116,14 @@ export default {
                 closeOnPressEscape: false,
                 customClass: 'custom-message-box'
             });
+        },
+        async getAllnotice() {
+            const response = await getAllnotice();
+            if (response.code === 0) {
+                this.tableData = response.data;
+            } else {
+                this.$message.error('获取公告失败');
+            }
         }
     }
 }

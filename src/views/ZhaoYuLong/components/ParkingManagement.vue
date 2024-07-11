@@ -13,7 +13,7 @@
                     <div slot="header" class="clearfix">
                         <span style="font-weight: bold;">龙湖舜山府-地下车库-D022</span>
                         <el-button style="float: right; padding: 3px 0" type="text"
-                            @click="openDialog('D022')">+添加车辆</el-button>
+                            @click="openDialog('D022', '1')">+添加车辆</el-button>
                     </div>
                     <div class="text item">车位状态：<el-tag type="success">启用中</el-tag></div>
                     <div class="text item">车位类型：<el-tag type="success">地下车库</el-tag></div>
@@ -25,7 +25,7 @@
                     <div slot="header" class="clearfix">
                         <span style="font-weight: bold;">大湖山语-地上-01</span>
                         <el-button style="float: right; padding: 3px 0" type="text"
-                            @click="openDialog('01')">+添加车辆</el-button>
+                            @click="openDialog('01', '2')">+添加车辆</el-button>
                     </div>
                     <div class="text item">车位状态：<el-tag type="success">启用中</el-tag></div>
                     <div class="text item">车位类型：<el-tag>地上车位</el-tag></div>
@@ -37,7 +37,7 @@
             <el-card class="box-card">
                 <div slot="header" class="clearfix">
                     <span style="font-weight: bold;">龙湖发山府-地下车库-D011</span>
-                    <el-button style="float: right; padding: 3px 0" type="text" @click="openDialog('D011')">+添加车辆</el-button>
+                    <el-button style="float: right; padding: 3px 0" type="text" @click="openDialog('D011', '3')">+添加车辆</el-button>
                 </div>
                 <div class="text item">车位状态：<el-tag type="success">启用中</el-tag></div>
                 <div class="text item">车位类型：<el-tag type="success">地下车库</el-tag></div>
@@ -117,6 +117,8 @@
 </style>
 
 <script>
+import { bind } from '@/api/parking';  // 注意: 修改为实际的api调用
+
 export default {
     name: 'ParkingManagement',
     data() {
@@ -124,29 +126,45 @@ export default {
             dialogFormVisible: false,
             currentSlotId: '',
             currentSlotName: '',
+            currentCardIndex: '',
             form: {},
             numberValidateForm: {
                 number: ''
             },
             plates: {
-                'D022': [],
-                '01': [],
-                'D011': []
+                'D022': ['dfsadfas', 'sdfasdf'],
+                '01': ['asdfasdf', '1512'],
+                'D011': ['wreiuwjf', '6516']
             } // 存储已绑定的车牌号码
         };
     },
+    created() {
+        this.bind();
+    },
     methods: {
-        openDialog(slotId) {
+        openDialog(slotId, cardIndex) {
             this.currentSlotId = slotId;
             this.currentSlotName = this.getSlotName(slotId);
+            this.currentCardIndex = cardIndex;
             this.dialogFormVisible = true;
             this.numberValidateForm.number = ''; // 打开对话框时清空输入框
         },
-        submitForm() {
-            this.$refs.numberValidateForm.validate((valid) => {
+        async submitForm() {
+            this.$refs.numberValidateForm.validate(async (valid) => {
                 if (valid) {
-                    this.plates[this.currentSlotId].push(this.numberValidateForm.number); // 将输入的车牌号码添加到对应的数组中
+                    const plateNumber = this.numberValidateForm.number;
+                    this.plates[this.currentSlotId].push(plateNumber); // 将输入的车牌号码添加到对应的数组中
                     this.dialogFormVisible = false;
+                    try {
+                        const response = await bind(this.currentCardIndex, plateNumber);
+                        if (response.code === 0) {
+                            this.$message.success('绑定成功');
+                        } else {
+                            this.$message.error('绑定失败');
+                        }
+                    } catch (error) {
+                        this.$message.error('绑定失败');
+                    }
                 } else {
                     console.log('error submit!!');
                     return false;
@@ -154,7 +172,7 @@ export default {
             });
         },
         getSlotName(slotId) {
-            switch(slotId) {
+            switch (slotId) {
                 case 'D022': return '龙湖舜山府-地下车库-D022';
                 case '01': return '大湖山语-地上-01';
                 case 'D011': return '龙湖发山府-地下车库-D011';

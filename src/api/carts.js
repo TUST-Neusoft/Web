@@ -8,7 +8,12 @@ export function addCarts(goodsNo, storeNo, num) {
             goods_no: goodsNo,
             store_no: storeNo,
             amount: num,
-          }
+        }
     })
-
 }
+export function getMyCarts() {
+    return request({
+      url: '/carts/getMyCarts',
+      method: 'get'
+    })
+  }

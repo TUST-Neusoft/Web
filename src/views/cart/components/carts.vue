@@ -46,9 +46,12 @@
 </template>
 
 <script>
+import { getMyCarts } from '@/api/carts';
+import { getDetail } from '@/api/goods';
 export default {
   data() {
     return {
+      class01:[],
       cartItems: [
         { storeNo: '自提点01', name: '蒙牛早餐奶原味250ml*16', price: 216.00, quantity: 2, subtotal: 432.00 },
         { storeNo: '自提点02', name: '上海滩生记', price: 36.00, quantity: 2, subtotal: 72.00 }
@@ -61,6 +64,10 @@ export default {
     total() {
       return this.selectedItems.reduce((sum, item) => sum + parseFloat(item.subtotal), 0).toFixed(2);
     }
+  },
+  created() {
+    this.getDetail();
+    this.getMyCarts();
   },
   methods: {
     updateSubtotal(item) {
@@ -85,6 +92,11 @@ export default {
     updateSelectedItems() {
       const selectedIds = this.selectedItems.map(item => item.name);
       this.selectedItems = this.cartItems.filter(item => selectedIds.includes(item.name));
+    },
+    async getMyCarts(){
+      const response = await getMyCarts()
+      this.class01=response.data
+      
     }
   },
   watch: {
