@@ -21,8 +21,7 @@
             <el-form-item label="活动时间" required>
                 <el-col :span="11">
                     <el-form-item prop="date1">
-                        <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm.date1"
-                            style="width: 50%;"></el-date-picker>
+                        <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm.date1" style="width: 50%;"></el-date-picker>
                     </el-form-item>
                 </el-col>
             </el-form-item>
@@ -35,19 +34,15 @@
         </el-divider>
         <div class="table-container">
             <el-table :data="tableData" style="width: 100%">
-                <el-table-column prop="id" label="访客id">
-                </el-table-column>
-                <el-table-column prop="goal" label="来访目的">
-                </el-table-column>
-                <el-table-column prop="date" label="来访时间">
-                </el-table-column>
+                <el-table-column prop="id" label="访客id"></el-table-column>
+                <el-table-column prop="goal" label="来访目的"></el-table-column>
+                <el-table-column prop="date" label="来访时间"></el-table-column>
                 <el-table-column prop="state" label="来访状态">
                     <template v-slot="scope">
                         <el-tag :type="getStateType(scope.row.state)">{{ scope.row.state }}</el-tag>
                     </template>
                 </el-table-column>
-                <el-table-column prop="creationtime" label="创建时间">
-                </el-table-column>
+                <el-table-column prop="creationtime" label="创建时间"></el-table-column>
             </el-table>
         </div>
     </div>
@@ -89,7 +84,7 @@ export default {
                 ],
             },
             tableData: [],
-            nextId: 5, // 下一个访客ID
+            nextId: 1, // 初始访客ID
         };
     },
     mounted() {
@@ -102,25 +97,22 @@ export default {
                     const currentDate = new Date();
                     const datePart = this.ruleForm.date1.toISOString().split('T')[0];
                     const timePart = currentDate.toTimeString().split(' ')[0];
-                    const visitorTime = `${datePart}T${timePart}`;
-                    const newVisitor = {
-                        visitor_objective: this.ruleForm.resource,
-                        visitor_time: visitorTime,
-                    };
-                    console.log('Submitting data:', newVisitor); // 打印提交的数据
+                    const visitorTime = `${datePart} ${timePart}`;
+                    console.log('Submitting data:', this.ruleForm.resource, visitorTime); // 打印提交的数据
                     try {
-                        const response = await addVisitor(newVisitor);
+                        const response = await addVisitor(this.ruleForm.resource, visitorTime);
                         console.log('Response:', response); // 打印响应数据
                         if (response.code === 0) {
                             const newEntry = {
                                 id: this.nextId.toString(),
-                                goal: newVisitor.visitor_objective,
-                                date: new Date(`${datePart} ${timePart}`).toLocaleString(), // 格式化日期并添加当前时间
+                                goal: this.ruleForm.resource,
+                                date: this.ruleForm.date1.toLocaleDateString(), // 格式化日期并添加当前时间
                                 state: '待来访',
                                 creationtime: new Date().toLocaleString()
                             };
                             this.tableData.push(newEntry); // 直接添加到表格的末尾
                             this.nextId++;
+                            this.sortTableDataById(); // 按ID排序
                             this.$refs[formName].resetFields();
                             this.$message.success('提交成功!');
                         } else {
@@ -160,9 +152,13 @@ export default {
                     state: visitor.visitorStatus === 0 ? '已来访' : '待来访',
                     creationtime: new Date(visitor.createTime).toLocaleString()
                 }));
+                this.sortTableDataById(); // 初次加载时按ID排序
             } else {
                 this.$message.error('获取访客记录失败');
             }
+        },
+        sortTableDataById() {
+            this.tableData.sort((a, b) => parseInt(a.id) - parseInt(b.id));
         }
     }
 }
