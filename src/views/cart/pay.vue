@@ -7,7 +7,7 @@
 
     <div class="title1">
       <h2>订单商品信息</h2>
-      <h4>订单号：{{ totalAmount }}</h4>
+      <h4>订单号：{{ orderNumber }}</h4>
     </div>
 
     <el-table :data="tableData" style="width: 100%">
@@ -55,10 +55,14 @@
 </template>
 
 <script>
+import { getMyWallet } from '@/api/wallet';
+import { getOrders } from '@/api/orders';
+
 export default {
   data () {
     return {
       active: 1,
+      balance: '80,064.42', // 示例余额
       tableData: [
         { productInformation: '商品A', monovalent: 100, quantity: 2, subtotal: 200 },
         { productInformation: '商品B', monovalent: 150, quantity: 3, subtotal: 450 },
@@ -66,12 +70,15 @@ export default {
       ],
       initialTotalAmount: 1050, // 示例总金额
       balanceDialogVisible: false,
-      balance: 500, // 示例余额
       paymentPassword: '',
       qrCodeDialogVisible: false,
       qrCodeType: '', // 微信或支付宝
       qrDialogTitle: ''
     }
+  },
+  mounted () {
+    this.getMyWallet();
+    this.getOrders();
   },
   computed: {
     totalAmount () {
@@ -82,8 +89,26 @@ export default {
       return total
     }
   },
-
   methods: {
+    async getMyWallet () {
+      try {
+        const response = await getMyWallet();
+        this.balance = response.data;
+      } catch (error) {
+        console.error('Failed to fetch wallet data:', error);
+        // Handle error as per your application's requirements
+      }
+    },
+    async getOrders () {
+      try {
+        const response = await getOrders(); // 假设这个函数是正确实现的用来获取订单数据的 API 请求
+        this.tableData = response.data; // 将订单数据赋值给 tableData，这里的 response.data 应该是一个包含订单信息的数组
+      } catch (error) {
+        console.error('Failed to fetch orders:', error);
+        // 根据你的应用逻辑处理错误，比如显示错误信息或者采取其他适当的措施
+      }
+    },
+
     showBalanceDialog () {
       this.balanceDialogVisible = true
     },
@@ -108,8 +133,8 @@ export default {
     }
   }
 }
-
 </script>
+
 
 <style>
 .container {

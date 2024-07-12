@@ -6,3 +6,11 @@ export function getMyOrders() {
     method: 'get'
   })
 }
+
+export function getOrders() {
+  return request({
+    url: '/orders/getOrders',
+    method: 'get'
+  })
+}
+

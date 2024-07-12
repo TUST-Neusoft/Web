@@ -15,10 +15,11 @@
       </div>
     </div>
     <div class="information">
-      <h4>订单号：{{ totalAmount }}</h4>
+      <h4>订单号：{{ orderNumber }}</h4>
       <h4>订单总金额：{{ totalAmount }}</h4>
-      <h4>订状态：{{ totalAmount }}</h4>
-      <h4>订单创建时间：{{ totalAmount }}</h4>
+      <h4>订单状态：{{ orderStatus }}</h4>
+      <h4>订单创建时间：{{ createTime }}</h4>
+
     </div>
     <div class="button1">
       <el-button @click="goHome">返回首页</el-button>
