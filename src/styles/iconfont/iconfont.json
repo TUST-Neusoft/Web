@@ -1,0 +1,30 @@
+{
+  "id": "4610337",
+  "name": "实训",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "1486848",
+      "name": "支付宝支付",
+      "font_class": "zhifubaozhifu",
+      "unicode": "e634",
+      "unicode_decimal": 58932
+    },
+    {
+      "icon_id": "1487626",
+      "name": "微信支付",
+      "font_class": "weixinzhifu",
+      "unicode": "e639",
+      "unicode_decimal": 58937
+    },
+    {
+      "icon_id": "2945169",
+      "name": "余额支付",
+      "font_class": "yuezhifu",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    }
+  ]
+}
